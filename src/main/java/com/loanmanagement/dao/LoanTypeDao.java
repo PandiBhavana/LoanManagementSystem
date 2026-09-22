@@ -10,4 +10,5 @@ public interface LoanTypeDao {
     void updateLoanType(LoanType loanType);
 
     void deleteLoanType(int loanTypeId);
+
 }

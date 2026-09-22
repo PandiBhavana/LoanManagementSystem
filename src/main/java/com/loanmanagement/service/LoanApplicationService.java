@@ -2,7 +2,7 @@ package com.loanmanagement.service;
 
 import com.loanmanagement.model.LoanApplication;
 
-public interface ApplicationService {
+public interface LoanApplicationService {
     void addApplication(LoanApplication application);
 
     LoanApplication getApplicationById(int applicationId);
