@@ -5,7 +5,7 @@ import com.loanmanagement.dao.impl.LoanApplicationDaoImpl;
 import com.loanmanagement.model.LoanApplication;
 import com.loanmanagement.service.LoanApplicationService;
 
-public class LoanLoanApplicationServiceImpl implements LoanApplicationService {
+public class LoanApplicationServiceImpl implements LoanApplicationService {
      LoanApplicationDao loanApplicationDao = new LoanApplicationDaoImpl();
     @Override
     public void addApplication(LoanApplication application) {
