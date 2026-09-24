@@ -1,31 +1,32 @@
 package com.loanmanagement;
 
-import com.loanmanagement.dao.LoanTypeDao;
-import com.loanmanagement.dao.impl.LoanTypeDaoImpl;
 import com.loanmanagement.model.LoanType;
+import com.loanmanagement.service.LoanTypeService;
+import com.loanmanagement.service.impl.LoanTypeServiceImpl;
 import org.junit.jupiter.api.Test;
 
-public class LoanTypeDaoImplTest {
-     LoanTypeDao loanTypeDao = new LoanTypeDaoImpl();
+public class LoanTypeServiceImplTest {
+    private LoanTypeService loanTypeService =
+            new LoanTypeServiceImpl();
     @Test
     public void testAddLoanType() {
 
         LoanType loanType = new LoanType();
 
-        loanType.setName("Education Loan");
-        loanType.setDescription("Loan for education");
-        loanType.setInterestRate(8.5);
+        loanType.setName("Service Test Loan");
+        loanType.setDescription("Loan for service testing");
+        loanType.setInterestRate(10.5);
         loanType.setMinAmount(50000);
         loanType.setMaxAmount(500000);
         loanType.setMaxTenureMonths(60);
         loanType.setStatus("ACTIVE");
 
-        loanTypeDao.addLoanType(loanType);
+        loanTypeService.addLoanType(loanType);
     }
     @Test
     public void testGetLoanTypeById() {
 
-        LoanType loanType = loanTypeDao.getLoanTypeById(5);
+        LoanType loanType = loanTypeService.getLoanTypeById(1);
 
         System.out.println("Loan Type ID: " + loanType.getLoanTypeId());
         System.out.println("Name: " + loanType.getName());
@@ -34,17 +35,16 @@ public class LoanTypeDaoImplTest {
     @Test
     public void testUpdateLoanType() {
 
-        LoanType loanType = loanTypeDao.getLoanTypeById(5);
+        LoanType loanType = loanTypeService.getLoanTypeById(1);
 
-        loanType.setInterestRate(9.5);
-        loanType.setMaxAmount(700000);
+        loanType.setInterestRate(11.0);
+        loanType.setMaxAmount(600000);
 
-        loanTypeDao.updateLoanType(loanType);
+        loanTypeService.updateLoanType(loanType);
     }
     @Test
     public void testDeleteLoanType() {
 
-        loanTypeDao.deleteLoanType(6);
+        loanTypeService.deleteLoanType(1);
     }
-
 }

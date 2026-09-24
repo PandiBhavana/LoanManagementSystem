@@ -1,28 +1,28 @@
 package com.loanmanagement;
 
-import com.loanmanagement.dao.UserDao;
-import com.loanmanagement.dao.impl.UserDaoImpl;
 import com.loanmanagement.model.User;
+import com.loanmanagement.service.UserService;
+import com.loanmanagement.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 
-public class UserDaoImplTest {
-   private UserDao userDao = new UserDaoImpl();
+public class UserServiceImplTest {
+    private UserService userService = new UserServiceImpl();
     @Test
     public void testAddUser() {
 
         User user = new User();
 
-        user.setUsername("junituser");
+        user.setUsername("service_test_user");
         user.setPassword("12345");
         user.setRole("CUSTOMER");
         user.setStatus("ACTIVE");
 
-        userDao.addUser(user);
+        userService.addUser(user);
     }
     @Test
     public void testGetUserById() {
 
-        User user = userDao.getUserById(17);
+        User user = userService.getUserById(1);
 
         System.out.println("User ID: " + user.getUserId());
         System.out.println("Username: " + user.getUsername());
@@ -31,16 +31,17 @@ public class UserDaoImplTest {
     @Test
     public void testUpdateUser() {
 
-        User user = userDao.getUserById(17);
+        User user = userService.getUserById(1);
 
-        user.setPassword("newpassword");
+        user.setPassword("updated123");
         user.setStatus("ACTIVE");
 
-        userDao.updateUser(user);
+        userService.updateUser(user);
     }
     @Test
     public void testDeleteUser() {
 
-        userDao.deleteUser(18);
+        userService.deleteUser(1);
     }
+
 }

@@ -100,22 +100,7 @@ public class AppController {
         loanService.updateLoan(existingLoan);
         loanService.deleteLoan(1);
 
-        RepaymentService repaymentService = new RepaymentServiceImpl();
-        Repayment repayment = new Repayment();
-        repayment.setLoanId(1);
-        repayment.setAmount(10000);
-        repayment.setPaymentDate("2026-09-22");
-        repayment.setPaymentMode("UPI");
-        repayment.setReferenceNo("UPI123456");
-        repayment.setRemarks("Monthly repayment");
-        repayment.setRecordedBy(1);
-        repaymentService.addRepayment(repayment);
-        Repayment existingRepayment =
-                repaymentService.getRepaymentById(1);
-        existingRepayment.setAmount(12000);
-        existingRepayment.setPaymentMode("BANK_TRANSFER");
-        repaymentService.updateRepayment(existingRepayment);
-        repaymentService.deleteRepayment(1);
+
 
     }
 }

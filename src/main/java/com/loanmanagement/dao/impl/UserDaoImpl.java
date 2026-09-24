@@ -11,12 +11,12 @@ import java.sql.ResultSet;
 public class UserDaoImpl implements UserDao {
     @Override
     public void addUser(User user) {
-        String sql = "INSERT INTO users (username, password, role, status) VALUES (?, ?, ?, ?)";
+        String statement = "INSERT INTO users (username, password, role, status) VALUES (?, ?, ?, ?)";
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(statement);
 
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
@@ -35,12 +35,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserById(int userId) {
-        String sql = "SELECT * FROM users WHERE user_id = ?";
+        String statement = "SELECT * FROM users WHERE user_id = ?";
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(statement);
             ps.setInt(1, userId);
 
             ResultSet rs = ps.executeQuery();
@@ -67,12 +67,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void updateUser(User user) {
-        String sql = "UPDATE users SET username=?, password=?, role=?, status=? WHERE user_id=?";
+        String statement = "UPDATE users SET username=?, password=?, role=?, status=? WHERE user_id=?";
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(statement);
 
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
@@ -92,12 +92,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void deleteUser(int userId) {
-        String sql = "DELETE FROM users WHERE user_id=?";
+        String statement = "DELETE FROM users WHERE user_id=?";
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(statement);
 
             ps.setInt(1, userId);
 
