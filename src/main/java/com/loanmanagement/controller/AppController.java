@@ -19,7 +19,7 @@ public class AppController {
         existingUser.setPassword("shiny04");
         existingUser.setStatus("ACTIVE");
         userService.updateUser(existingUser);
-        userService.deleteUser(1);
+       // userService.deleteUser(1);
 
 
         LoanTypeService loanTypeService = new LoanTypeServiceImpl();
@@ -36,7 +36,7 @@ public class AppController {
         existingLoanType.setInterestRate(11.0);
         existingLoanType.setMaxAmount(600000);
         loanTypeService.updateLoanType(existingLoanType);
-        loanTypeService.deleteLoanType(1);
+      //  loanTypeService.deleteLoanType(1);
 
         CustomerService customerService = new CustomerServiceImpl();
         Customer customer = new Customer();
@@ -60,7 +60,7 @@ public class AppController {
         existingCustomer.setAddress("Hyderabad");
         existingCustomer.setMonthlyIncome(60000);
         customerService.updateCustomer(existingCustomer);
-        customerService.deleteCustomer(1);
+       // customerService.deleteCustomer(1);
 
         LoanApplicationService loanApplicationService = new LoanApplicationServiceImpl();
         LoanApplication application = new LoanApplication();
@@ -77,7 +77,7 @@ public class AppController {
         existingApplication.setRequestedAmount(250000);
         existingApplication.setRemarks("Amount updated");
         loanApplicationService.updateApplication(existingApplication);
-        loanApplicationService.deleteApplication(1);
+      //  loanApplicationService.deleteApplication(1);
 
 
         LoanService loanService = new LoanServiceImpl();
@@ -98,7 +98,7 @@ public class AppController {
         existingLoan.setInterestRate(11.0);
         existingLoan.setOutstandingAmount(240000);
         loanService.updateLoan(existingLoan);
-        loanService.deleteLoan(1);
+       // loanService.deleteLoan(1);
 
 
 
