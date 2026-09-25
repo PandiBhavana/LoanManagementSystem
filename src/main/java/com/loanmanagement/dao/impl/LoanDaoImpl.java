@@ -3,19 +3,32 @@ package com.loanmanagement.dao.impl;
 import com.loanmanagement.dao.LoanDao;
 import com.loanmanagement.model.Loan;
 import com.loanmanagement.util.DBConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class LoanDaoImpl implements LoanDao {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(LoanDaoImpl.class);
+    private static final  String statement = "INSERT INTO loans " +
+            "(application_id, customer_id, loan_type_id, principal_amount, " +
+            "interest_rate, tenure_months, total_payable, outstanding_amount, " +
+            "start_date, status, created_by) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final  String statement1 = "SELECT * FROM loans WHERE loan_id = ?";
+    private static final  String statement2 = "UPDATE loans SET " +
+            "application_id=?, customer_id=?, loan_type_id=?, " +
+            "principal_amount=?, interest_rate=?, tenure_months=?, " +
+            "total_payable=?, outstanding_amount=?, start_date=?, " +
+            "status=?, created_by=? WHERE loan_id=?";
+
+    private static final  String statement3= "DELETE FROM loans WHERE loan_id=?";
     @Override
     public void addLoan(Loan loan) {
-        String statement = "INSERT INTO loans " +
-                "(application_id, customer_id, loan_type_id, principal_amount, " +
-                "interest_rate, tenure_months, total_payable, outstanding_amount, " +
-                "start_date, status, created_by) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             Connection con = new DBConnection().getConnection();
@@ -35,22 +48,21 @@ public class LoanDaoImpl implements LoanDao {
 
             ps.executeUpdate();
 
-            System.out.println("Loan added successfully!");
+            logger.info("Loan added successfully!");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error while adding loan", e);
         }
     }
 
 
     @Override
     public Loan getLoanById(int loanId) {
-        String statement = "SELECT * FROM loans WHERE loan_id = ?";
 
         try {
-            // Move these two lines INSIDE the try block
+
             Connection con = new DBConnection().getConnection();
-            PreparedStatement ps = con.prepareStatement(statement);
+            PreparedStatement ps = con.prepareStatement(statement1);
 
             ps.setInt(1, loanId);
 
@@ -75,7 +87,7 @@ public class LoanDaoImpl implements LoanDao {
                 return loan;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error while getting loan", e);
         }
         return null;
     }
@@ -83,15 +95,11 @@ public class LoanDaoImpl implements LoanDao {
     @Override
     public void updateLoan(Loan loan) {
 
-        String statement = "UPDATE loans SET " +
-                "application_id=?, customer_id=?, loan_type_id=?, " +
-                "principal_amount=?, interest_rate=?, tenure_months=?, " +
-                "total_payable=?, outstanding_amount=?, start_date=?, " +
-                "status=?, created_by=? WHERE loan_id=?";
+
 
         try {
             Connection con = new DBConnection().getConnection();
-            PreparedStatement ps = con.prepareStatement(statement);
+            PreparedStatement ps = con.prepareStatement(statement2);
 
             ps.setInt(1, loan.getApplicationId());
             ps.setInt(2, loan.getCustomerId());
@@ -108,10 +116,10 @@ public class LoanDaoImpl implements LoanDao {
 
             ps.executeUpdate();
 
-            System.out.println("Loan updated successfully!");
+            logger.info("Loan updated successfully!");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error while updating Loan", e);
 
 
         }
@@ -119,20 +127,20 @@ public class LoanDaoImpl implements LoanDao {
 
         @Override
         public void deleteLoan ( int loanId){
-            String statement = "DELETE FROM loans WHERE loan_id=?";
+
 
             try {
                 Connection con = new DBConnection().getConnection();
-                PreparedStatement ps = con.prepareStatement(statement);
+                PreparedStatement ps = con.prepareStatement(statement3);
 
                 ps.setInt(1, loanId);
 
                 ps.executeUpdate();
 
-                System.out.println("Loan deleted successfully!");
+                logger.info("Loan deleted successfully!");
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("error while deleting Loan", e);
             }
         }
 

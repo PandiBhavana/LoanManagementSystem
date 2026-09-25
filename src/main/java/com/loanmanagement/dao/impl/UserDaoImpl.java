@@ -3,15 +3,23 @@ package com.loanmanagement.dao.impl;
 import com.loanmanagement.dao.UserDao;
 import com.loanmanagement.model.User;
 import com.loanmanagement.util.DBConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class UserDaoImpl implements UserDao {
+    private static final Logger logger =
+            LoggerFactory.getLogger(UserDaoImpl.class);
+    private static final String statement =
+            "INSERT INTO users (username, password, role, status) VALUES (?, ?, ?, ?)";
+    private static final String statement1 = "SELECT * FROM users WHERE user_id = ?";
+    private static final String statement2 = "UPDATE users SET username=?, password=?, role=?, status=? WHERE user_id=?";
+     private static final String statement3 = "DELETE FROM users WHERE user_id=?";
     @Override
     public void addUser(User user) {
-        String statement = "INSERT INTO users (username, password, role, status) VALUES (?, ?, ?, ?)";
 
         try {
             Connection con = new DBConnection().getConnection();
@@ -25,22 +33,22 @@ public class UserDaoImpl implements UserDao {
 
             ps.executeUpdate();
 
-            System.out.println("User added successfully!");
+            logger.info("User added successfully");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error while adding user", e);
         }
 
     }
 
     @Override
     public User getUserById(int userId) {
-        String statement = "SELECT * FROM users WHERE user_id = ?";
+
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement);
+            PreparedStatement ps = con.prepareStatement(statement1);
             ps.setInt(1, userId);
 
             ResultSet rs = ps.executeQuery();
@@ -60,19 +68,18 @@ public class UserDaoImpl implements UserDao {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error while getting user", e);
         }
         return null;
     }
 
     @Override
     public void updateUser(User user) {
-        String statement = "UPDATE users SET username=?, password=?, role=?, status=? WHERE user_id=?";
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement);
+            PreparedStatement ps = con.prepareStatement(statement2);
 
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
@@ -82,22 +89,22 @@ public class UserDaoImpl implements UserDao {
 
             ps.executeUpdate();
 
-            System.out.println("User updated successfully!");
+            logger.info("User updated successfully");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error while updating user", e);
         }
 
     }
 
     @Override
     public void deleteUser(int userId) {
-        String statement = "DELETE FROM users WHERE user_id=?";
+
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement);
+            PreparedStatement ps = con.prepareStatement(statement3);
 
             ps.setInt(1, userId);
 
@@ -106,7 +113,7 @@ public class UserDaoImpl implements UserDao {
             System.out.println("User deleted successfully!");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error while deleting user", e);
         }
     }
 

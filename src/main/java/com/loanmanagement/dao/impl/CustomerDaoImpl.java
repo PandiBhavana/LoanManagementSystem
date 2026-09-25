@@ -3,20 +3,34 @@ package com.loanmanagement.dao.impl;
 import com.loanmanagement.dao.CustomerDao;
 import com.loanmanagement.model.Customer;
 import com.loanmanagement.util.DBConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class CustomerDaoImpl implements CustomerDao {
+    private static final Logger logger =
+            LoggerFactory.getLogger(CustomerDaoImpl.class);
+    private static final String statement = "INSERT INTO customers " +
+            "(user_id, full_name, email, phone, dob, address, monthly_income, " +
+            "pan_number, aadhaar_last4, employment_type, account_number, " +
+            "ifsc_code, bank_name, kyc_status, kyc_remarks, kyc_verified_by, " +
+            "kyc_verified_at, credit_score, existing_emi, status) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String statement1 = "SELECT * FROM customers WHERE customer_id = ?";
+     private static final String statement2 = "UPDATE customers SET " +
+            "user_id=?, full_name=?, email=?, phone=?, dob=?, address=?, " +
+            "monthly_income=?, pan_number=?, aadhaar_last4=?, employment_type=?, " +
+            "account_number=?, ifsc_code=?, bank_name=?, kyc_status=?, " +
+            "kyc_remarks=?, kyc_verified_by=?, kyc_verified_at=?, " +
+            "credit_score=?, existing_emi=?, status=? " +
+            "WHERE customer_id=?";
+
+    private static final String statement3="Delete From FROM customers WHERE user_id=?";
     @Override
     public void addCustomer(Customer customer) {
-        String statement = "INSERT INTO customers " +
-                "(user_id, full_name, email, phone, dob, address, monthly_income, " +
-                "pan_number, aadhaar_last4, employment_type, account_number, " +
-                "ifsc_code, bank_name, kyc_status, kyc_remarks, kyc_verified_by, " +
-                "kyc_verified_at, credit_score, existing_emi, status) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             Connection con = new DBConnection().getConnection();
@@ -50,20 +64,19 @@ public class CustomerDaoImpl implements CustomerDao {
             }
 
             ps.executeUpdate();
-            System.out.println("Customer added successfully!");
+            logger.info("Customer added successfully!");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error while adding customer", e);
         }
     }
 
     @Override
     public Customer getCustomerById(int customerId) {
-        String statement = "SELECT * FROM customers WHERE customer_id = ?";
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement);
+            PreparedStatement ps = con.prepareStatement(statement1);
             ps.setInt(1, customerId);
 
             ResultSet rs = ps.executeQuery();
@@ -98,7 +111,7 @@ public class CustomerDaoImpl implements CustomerDao {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error while getting customer", e);
         }
 
         return null;
@@ -106,18 +119,12 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public void updateCustomer(Customer customer) {
-        String statement = "UPDATE customers SET " +
-                "user_id=?, full_name=?, email=?, phone=?, dob=?, address=?, " +
-                "monthly_income=?, pan_number=?, aadhaar_last4=?, employment_type=?, " +
-                "account_number=?, ifsc_code=?, bank_name=?, kyc_status=?, " +
-                "kyc_remarks=?, kyc_verified_by=?, kyc_verified_at=?, " +
-                "credit_score=?, existing_emi=?, status=? " +
-                "WHERE customer_id=?";
+
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement);
+            PreparedStatement ps = con.prepareStatement(statement2);
 
             ps.setInt(1, customer.getUserId());
             ps.setString(2, customer.getFullName());
@@ -143,29 +150,28 @@ public class CustomerDaoImpl implements CustomerDao {
 
             ps.executeUpdate();
 
-            System.out.println("Customer updated successfully!");
+            logger.info("Customer updated successfully!");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error while updating customer", e);
         }
     }
         @Override
         public void deleteCustomer( int customerId){
-            String statement = "DELETE FROM customers WHERE customer_id=?";
 
             try {
                 Connection con = new DBConnection().getConnection();
 
-                PreparedStatement ps = con.prepareStatement(statement);
+                PreparedStatement ps = con.prepareStatement(statement3);
 
                 ps.setInt(1, customerId);
 
                 ps.executeUpdate();
 
-                System.out.println("Customer deleted successfully!");
+                logger.info("Customer deleted successfully!");
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("error while deleting customer", e);
             }
         }
     }

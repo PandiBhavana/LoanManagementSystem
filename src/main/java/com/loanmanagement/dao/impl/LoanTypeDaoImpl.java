@@ -3,17 +3,30 @@ package com.loanmanagement.dao.impl;
 import com.loanmanagement.dao.LoanTypeDao;
 import com.loanmanagement.model.LoanType;
 import com.loanmanagement.util.DBConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class LoanTypeDaoImpl implements LoanTypeDao {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(LoanTypeDaoImpl.class);
+    private static final String statement = "INSERT INTO loan_types " +
+            "(name, description, interest_rate, min_amount, max_amount, max_tenure_months, status) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String statement1 = "SELECT * FROM loan_types WHERE loan_type_id = ?";
+
+    private static final   String statement2 = "UPDATE loan_types SET " +
+            "name=?, description=?, interest_rate=?, min_amount=?, " +
+            "max_amount=?, max_tenure_months=?, status=? " +
+            "WHERE loan_type_id=?";
+    private static final String statement3 = "DELETE FROM loan_types WHERE loan_type_id=?";
     @Override
     public void addLoanType(LoanType loanType) {
-        String statement = "INSERT INTO loan_types " +
-                "(name, description, interest_rate, min_amount, max_amount, max_tenure_months, status) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
 
         try {
             Connection con = new DBConnection().getConnection();
@@ -30,21 +43,20 @@ public class LoanTypeDaoImpl implements LoanTypeDao {
 
             ps.executeUpdate();
 
-            System.out.println("Loan type added successfully!");
+            logger.info("Loan type added successfully!");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error while adding LoanType", e);
         }
     }
 
     @Override
     public LoanType getLoanTypeById(int loanTypeId) {
-        String statement = "SELECT * FROM loan_types WHERE loan_type_id = ?";
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement);
+            PreparedStatement ps = con.prepareStatement(statement1);
             ps.setInt(1, loanTypeId);
 
             ResultSet rs = ps.executeQuery();
@@ -66,7 +78,7 @@ public class LoanTypeDaoImpl implements LoanTypeDao {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error while getting LoanType", e);
         }
 
         return null;
@@ -74,15 +86,12 @@ public class LoanTypeDaoImpl implements LoanTypeDao {
 
     @Override
     public void updateLoanType(LoanType loanType) {
-        String statement = "UPDATE loan_types SET " +
-                "name=?, description=?, interest_rate=?, min_amount=?, " +
-                "max_amount=?, max_tenure_months=?, status=? " +
-                "WHERE loan_type_id=?";
+
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement);
+            PreparedStatement ps = con.prepareStatement(statement2);
 
             ps.setString(1, loanType.getName());
             ps.setString(2, loanType.getDescription());
@@ -95,31 +104,31 @@ public class LoanTypeDaoImpl implements LoanTypeDao {
 
             ps.executeUpdate();
 
-            System.out.println("Loan type updated successfully!");
+            logger.info("Loan type updated successfully!");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error while updating LoanType", e);
         }
     }
 
     @Override
     public void deleteLoanType(int loanTypeId) {
 
-        String statement = "DELETE FROM loan_types WHERE loan_type_id=?";
+
 
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement);
+            PreparedStatement ps = con.prepareStatement(statement3);
 
             ps.setInt(1, loanTypeId);
 
             ps.executeUpdate();
 
-            System.out.println("Loan type deleted successfully!");
+            logger.info("Loan type deleted successfully!");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error while deleting loanType", e);
         }
     }
 }

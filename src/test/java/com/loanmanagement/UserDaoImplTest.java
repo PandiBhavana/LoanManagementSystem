@@ -12,8 +12,8 @@ public class UserDaoImplTest {
 
         User user = new User();
 
-        user.setUsername("junituser");
-        user.setPassword("12345");
+        user.setUsername("deepthi");
+        user.setPassword("1994");
         user.setRole("CUSTOMER");
         user.setStatus("ACTIVE");
 
