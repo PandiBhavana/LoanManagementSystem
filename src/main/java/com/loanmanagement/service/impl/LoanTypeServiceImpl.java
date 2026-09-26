@@ -11,6 +11,31 @@ public class LoanTypeServiceImpl implements LoanTypeService {
 
     @Override
     public void addLoanType(LoanType loanType) {
+        if (loanType.getMinAmount() < 0) {
+            throw new IllegalArgumentException(
+                    "Minimum amount cannot be negative");
+        }
+
+        if (loanType.getMaxAmount() <= 0) {
+            throw new IllegalArgumentException(
+                    "Maximum amount must be greater than zero");
+        }
+
+        if (loanType.getMinAmount() > loanType.getMaxAmount()) {
+            throw new IllegalArgumentException(
+                    "Minimum amount cannot be greater than maximum amount");
+        }
+
+        if (loanType.getInterestRate() < 0) {
+            throw new IllegalArgumentException(
+                    "Interest rate cannot be negative");
+        }
+
+        if (loanType.getMaxTenureMonths() <= 0) {
+            throw new IllegalArgumentException(
+                    "Maximum tenure must be greater than zero");
+        }
+
         loanTypeDao.addLoanType(loanType);
     }
 
@@ -21,6 +46,31 @@ public class LoanTypeServiceImpl implements LoanTypeService {
 
     @Override
     public void updateLoanType(LoanType loanType) {
+        if (loanType.getMinAmount() < 0) {
+            throw new IllegalArgumentException(
+                    "Minimum amount cannot be negative");
+        }
+
+        if (loanType.getMaxAmount() <= 0) {
+            throw new IllegalArgumentException(
+                    "Maximum amount must be greater than zero");
+        }
+
+        if (loanType.getMinAmount() > loanType.getMaxAmount()) {
+            throw new IllegalArgumentException(
+                    "Minimum amount cannot be greater than maximum amount");
+        }
+
+        if (loanType.getInterestRate() < 0) {
+            throw new IllegalArgumentException(
+                    "Interest rate cannot be negative");
+        }
+
+        if (loanType.getMaxTenureMonths() <= 0) {
+            throw new IllegalArgumentException(
+                    "Maximum tenure must be greater than zero");
+        }
+
         loanTypeDao.updateLoanType(loanType);
     }
 

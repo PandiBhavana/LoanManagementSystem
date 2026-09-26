@@ -18,6 +18,7 @@ public class UserDaoImpl implements UserDao {
     private static final String statement1 = "SELECT * FROM users WHERE user_id = ?";
     private static final String statement2 = "UPDATE users SET username=?, password=?, role=?, status=? WHERE user_id=?";
      private static final String statement3 = "DELETE FROM users WHERE user_id=?";
+    private static final  String statement4 = "SELECT * FROM users WHERE username = ?";
     @Override
     public void addUser(User user) {
 
@@ -110,12 +111,43 @@ public class UserDaoImpl implements UserDao {
 
             ps.executeUpdate();
 
-            System.out.println("User deleted successfully!");
+            logger.info("User deleted successfully");
 
         } catch (Exception e) {
             logger.error("Error while deleting user", e);
         }
     }
 
+    @Override
+    public User getUserByUsername(String username) {
+        try {
+            Connection con = new DBConnection().getConnection();
+
+            PreparedStatement ps = con.prepareStatement(statement4);
+
+            ps.setString(1, username);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                User user = new User();
+
+                user.setUserId(rs.getInt("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getString("role"));
+                user.setStatus(rs.getString("status"));
+                user.setCreatedAt(rs.getString("created_at"));
+
+                return user;
+            }
+
+        } catch (Exception e) {
+            logger.error("Error while getting user by username", e);
+        }
+
+        return null;
     }
+}
 

@@ -5,6 +5,8 @@ import com.loanmanagement.service.LoanTypeService;
 import com.loanmanagement.service.impl.LoanTypeServiceImpl;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class LoanTypeServiceImplTest {
     private LoanTypeService loanTypeService =
             new LoanTypeServiceImpl();
@@ -45,6 +47,39 @@ public class LoanTypeServiceImplTest {
     @Test
     public void testDeleteLoanType() {
 
-        loanTypeService.deleteLoanType(1);
+        loanTypeService.deleteLoanType(99);
+    }
+    @Test
+    public void testAddLoanTypeWithInvalidAmount() {
+
+        LoanType loanType = new LoanType();
+
+        loanType.setName("Invalid Loan");
+        loanType.setInterestRate(10.0);
+        loanType.setMinAmount(600000);
+        loanType.setMaxAmount(500000);
+        loanType.setMaxTenureMonths(60);
+        loanType.setStatus("ACTIVE");
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            loanTypeService.addLoanType(loanType);
+        });
+    }
+
+    @Test
+    public void testAddLoanTypeWithInvalidTenure() {
+
+        LoanType loanType = new LoanType();
+
+        loanType.setName("Invalid Tenure Loan");
+        loanType.setInterestRate(10.0);
+        loanType.setMinAmount(50000);
+        loanType.setMaxAmount(500000);
+        loanType.setMaxTenureMonths(0);
+        loanType.setStatus("ACTIVE");
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            loanTypeService.addLoanType(loanType);
+        });
     }
 }

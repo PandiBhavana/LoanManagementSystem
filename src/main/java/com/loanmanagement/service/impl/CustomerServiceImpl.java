@@ -4,6 +4,7 @@ import com.loanmanagement.dao.CustomerDao;
 import com.loanmanagement.dao.impl.CustomerDaoImpl;
 import com.loanmanagement.model.Customer;
 import com.loanmanagement.service.CustomerService;
+import com.loanmanagement.util.ValidationUtil;
 
 public class CustomerServiceImpl implements CustomerService {
 
@@ -11,6 +12,22 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void addCustomer(Customer customer) {
+        if (customer.getFullName() == null ||
+                customer.getFullName().trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Customer name is required");
+        }
+
+        if (!ValidationUtil.isValidEmail(customer.getEmail())) {
+            throw new IllegalArgumentException(
+                    "Invalid email format");
+        }
+
+        if (!ValidationUtil.isValidPhone(customer.getPhone())) {
+            throw new IllegalArgumentException(
+                    "Invalid phone number");
+        }
+
         customerDao.addCustomer(customer);
     }
 
@@ -21,6 +38,22 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void updateCustomer(Customer customer) {
+        if (customer.getFullName() == null ||
+                customer.getFullName().trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Customer name is required");
+        }
+
+        if (!ValidationUtil.isValidEmail(customer.getEmail())) {
+            throw new IllegalArgumentException(
+                    "Invalid email format");
+        }
+
+        if (!ValidationUtil.isValidPhone(customer.getPhone())) {
+            throw new IllegalArgumentException(
+                    "Invalid phone number");
+        }
+
         customerDao.updateCustomer(customer);
     }
 

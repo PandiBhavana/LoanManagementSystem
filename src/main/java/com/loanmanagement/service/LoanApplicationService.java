@@ -10,4 +10,5 @@ public interface LoanApplicationService {
     void updateApplication(LoanApplication application);
 
     void deleteApplication(int applicationId);
+
 }
