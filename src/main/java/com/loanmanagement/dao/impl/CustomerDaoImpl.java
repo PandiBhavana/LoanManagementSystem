@@ -28,7 +28,7 @@ public class CustomerDaoImpl implements CustomerDao {
             "credit_score=?, existing_emi=?, status=? " +
             "WHERE customer_id=?";
 
-    private static final String statement3="Delete From FROM customers WHERE user_id=?";
+    private static final String statement3="Delete FROM customers WHERE user_id=?";
     @Override
     public void addCustomer(Customer customer) {
 

@@ -2,6 +2,7 @@ package com.loanmanagement.service.impl;
 
 import com.loanmanagement.dao.LoanTypeDao;
 import com.loanmanagement.dao.impl.LoanTypeDaoImpl;
+import com.loanmanagement.exception.ValidationException;
 import com.loanmanagement.model.LoanType;
 import com.loanmanagement.service.LoanTypeService;
 
@@ -12,27 +13,27 @@ public class LoanTypeServiceImpl implements LoanTypeService {
     @Override
     public void addLoanType(LoanType loanType) {
         if (loanType.getMinAmount() < 0) {
-            throw new IllegalArgumentException(
+           throw new ValidationException(
                     "Minimum amount cannot be negative");
         }
 
         if (loanType.getMaxAmount() <= 0) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Maximum amount must be greater than zero");
         }
 
         if (loanType.getMinAmount() > loanType.getMaxAmount()) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Minimum amount cannot be greater than maximum amount");
         }
 
         if (loanType.getInterestRate() < 0) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Interest rate cannot be negative");
         }
 
         if (loanType.getMaxTenureMonths() <= 0) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Maximum tenure must be greater than zero");
         }
 
@@ -47,27 +48,27 @@ public class LoanTypeServiceImpl implements LoanTypeService {
     @Override
     public void updateLoanType(LoanType loanType) {
         if (loanType.getMinAmount() < 0) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Minimum amount cannot be negative");
         }
 
         if (loanType.getMaxAmount() <= 0) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Maximum amount must be greater than zero");
         }
 
         if (loanType.getMinAmount() > loanType.getMaxAmount()) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Minimum amount cannot be greater than maximum amount");
         }
 
         if (loanType.getInterestRate() < 0) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Interest rate cannot be negative");
         }
 
         if (loanType.getMaxTenureMonths() <= 0) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Maximum tenure must be greater than zero");
         }
 

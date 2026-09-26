@@ -6,6 +6,9 @@ import com.loanmanagement.dao.UserDao;
 import com.loanmanagement.dao.impl.LoanApplicationDaoImpl;
 import com.loanmanagement.dao.impl.LoanTypeDaoImpl;
 import com.loanmanagement.dao.impl.UserDaoImpl;
+import com.loanmanagement.exception.BusinessException;
+import com.loanmanagement.exception.NotFoundException;
+import com.loanmanagement.exception.ValidationException;
 import com.loanmanagement.model.LoanApplication;
 import com.loanmanagement.model.LoanType;
 import com.loanmanagement.model.User;
@@ -30,25 +33,25 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
                 loanTypeDao.getLoanTypeById(application.getLoanTypeId());
 
         if (loanType == null) {
-            throw new IllegalArgumentException("Loan type not found");
+            throw new NotFoundException("Loan type not found");
         }
 
         if (!"ACTIVE".equals(loanType.getStatus())) {
-            throw new IllegalArgumentException(
+            throw new BusinessException(
                     "Loan type is not available");
         }
 
         if (application.getRequestedAmount() < loanType.getMinAmount()
                 || application.getRequestedAmount() > loanType.getMaxAmount()) {
 
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Requested amount is outside the allowed loan amount range");
         }
 
         if (application.getTenureMonths() <= 0
                 || application.getTenureMonths() > loanType.getMaxTenureMonths()) {
 
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Invalid loan tenure");
         }
 
@@ -72,28 +75,28 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
                         application.getApplicationId());
 
         if (existingApplication == null) {
-            throw new IllegalArgumentException("Application not found");
+            throw new NotFoundException("Application not found");
         }
 
         if (!"PENDING".equals(existingApplication.getStatus())) {
-            throw new IllegalArgumentException(
+            throw new BusinessException(
                     "Only pending applications can be updated");
         }
         if (!"APPROVED".equals(application.getStatus())
                 && !"REJECTED".equals(application.getStatus())) {
 
-            throw new IllegalArgumentException(
+            throw new BusinessException(
                     "Application can only be approved or rejected");
         }
         User reviewer = userDao.getUserById(application.getReviewedBy());
 
         if (reviewer == null) {
-            throw new IllegalArgumentException("Reviewer not found");
+            throw new NotFoundException("Reviewer not found");
         }
 
 
         if (!"LOAN_OFFICER".equals(reviewer.getRole())) {
-            throw new IllegalArgumentException(
+            throw new BusinessException(
                     "Only Loan Officer can approve or reject application");
         }
 

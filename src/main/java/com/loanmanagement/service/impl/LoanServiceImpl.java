@@ -6,6 +6,9 @@ import com.loanmanagement.dao.LoanTypeDao;
 import com.loanmanagement.dao.impl.LoanApplicationDaoImpl;
 import com.loanmanagement.dao.impl.LoanDaoImpl;
 import com.loanmanagement.dao.impl.LoanTypeDaoImpl;
+import com.loanmanagement.exception.BusinessException;
+import com.loanmanagement.exception.NotFoundException;
+import com.loanmanagement.exception.ValidationException;
 import com.loanmanagement.model.Loan;
 import com.loanmanagement.model.LoanApplication;
 import com.loanmanagement.model.LoanType;
@@ -28,12 +31,12 @@ public class LoanServiceImpl implements LoanService {
                         loan.getApplicationId());
 
         if (application == null) {
-            throw new IllegalArgumentException(
+            throw new NotFoundException(
                     "Loan application not found");
         }
 
         if (!"APPROVED".equals(application.getStatus())) {
-            throw new IllegalArgumentException(
+            throw new BusinessException(
                     "Loan can be created only from an approved application");
         }
 
@@ -41,7 +44,7 @@ public class LoanServiceImpl implements LoanService {
                 loanTypeDao.getLoanTypeById(application.getLoanTypeId());
 
         if (loanType == null) {
-            throw new IllegalArgumentException("Loan type not found");
+            throw new NotFoundException("Loan type not found");
         }
         loan.setCustomerId(application.getCustomerId());
         loan.setLoanTypeId(application.getLoanTypeId());

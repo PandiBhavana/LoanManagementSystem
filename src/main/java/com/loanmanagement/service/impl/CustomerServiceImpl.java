@@ -2,6 +2,7 @@ package com.loanmanagement.service.impl;
 
 import com.loanmanagement.dao.CustomerDao;
 import com.loanmanagement.dao.impl.CustomerDaoImpl;
+import com.loanmanagement.exception.ValidationException;
 import com.loanmanagement.model.Customer;
 import com.loanmanagement.service.CustomerService;
 import com.loanmanagement.util.ValidationUtil;
@@ -14,17 +15,17 @@ public class CustomerServiceImpl implements CustomerService {
     public void addCustomer(Customer customer) {
         if (customer.getFullName() == null ||
                 customer.getFullName().trim().isEmpty()) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Customer name is required");
         }
 
         if (!ValidationUtil.isValidEmail(customer.getEmail())) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Invalid email format");
         }
 
         if (!ValidationUtil.isValidPhone(customer.getPhone())) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Invalid phone number");
         }
 
@@ -40,17 +41,17 @@ public class CustomerServiceImpl implements CustomerService {
     public void updateCustomer(Customer customer) {
         if (customer.getFullName() == null ||
                 customer.getFullName().trim().isEmpty()) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Customer name is required");
         }
 
         if (!ValidationUtil.isValidEmail(customer.getEmail())) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Invalid email format");
         }
 
         if (!ValidationUtil.isValidPhone(customer.getPhone())) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Invalid phone number");
         }
 
