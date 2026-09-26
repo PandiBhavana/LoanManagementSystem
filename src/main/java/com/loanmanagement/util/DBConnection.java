@@ -23,7 +23,9 @@ public class DBConnection {
 
             InputStream input =
                     getClass().getClassLoader().getResourceAsStream("db.properties");
-
+            if (input == null) {
+                throw new RuntimeException("db.properties file not found");
+            }
             properties.load(input);
 
             String url = properties.getProperty("db.url");
@@ -35,6 +37,7 @@ public class DBConnection {
 
         } catch (Exception e) {
             logger.error("Error while connecting to database", e);
+            throw new RuntimeException("Failed to connect to database", e);
         }
 
         return con;

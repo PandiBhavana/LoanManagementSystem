@@ -25,8 +25,6 @@ public class LoanApplicationDaoImpl implements LoanApplicationDao {
             "WHERE application_id=?";
     private static final String statement3 = "DELETE FROM loan_applications WHERE application_id=?";
     private static final String sql = "SELECT COUNT(*) FROM loan_applications WHERE loan_type_id=?";
-    private LoanApplicationDao loanApplicationDao =
-            new LoanApplicationDaoImpl();
     @Override
     public boolean existsByLoanTypeId(int loanTypeId) {
         try (Connection con = new DBConnection().getConnection();

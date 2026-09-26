@@ -60,6 +60,9 @@ public class LoanServiceImpl implements LoanService {
             throw new BusinessException(
                     "Only Loan Officer can create a loan");
         }
+        if (!"ACTIVE".equals(loanOfficer.getStatus())) {
+            throw new BusinessException("Loan Officer is inactive");
+        }
 
         LoanType loanType =
                 loanTypeDao.getLoanTypeById(application.getLoanTypeId());
@@ -89,6 +92,32 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public void updateLoan(Loan loan) {
+
+        if (loan.getPrincipalAmount() <= 0) {
+            throw new ValidationException(
+                    "Principal amount must be greater than zero");
+        }
+
+        if (loan.getOutstandingAmount() < 0) {
+            throw new ValidationException(
+                    "Outstanding amount cannot be negative");
+        }
+
+        if (loan.getOutstandingAmount() > loan.getPrincipalAmount()) {
+            throw new ValidationException(
+                    "Outstanding amount cannot exceed principal amount");
+        }
+
+        if (loan.getTenureMonths() <= 0) {
+            throw new ValidationException(
+                    "Tenure must be greater than zero");
+        }
+        if (loan.getStatus() == null ||
+                (!"ACTIVE".equals(loan.getStatus())
+                        && !"CLOSED".equals(loan.getStatus()))) {
+            throw new ValidationException("Invalid loan status");
+        }
+
         loanDao.updateLoan(loan);
     }
 

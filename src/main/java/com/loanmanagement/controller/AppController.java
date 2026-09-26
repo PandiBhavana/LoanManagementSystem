@@ -1,7 +1,5 @@
 package com.loanmanagement.controller;
 
-import com.loanmanagement.dao.*;
-import com.loanmanagement.dao.impl.*;
 import com.loanmanagement.model.*;
 import com.loanmanagement.service.*;
 import com.loanmanagement.service.impl.*;

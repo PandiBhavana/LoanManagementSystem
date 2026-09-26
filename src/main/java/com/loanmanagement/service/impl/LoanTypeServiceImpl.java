@@ -16,6 +16,10 @@ public class LoanTypeServiceImpl implements LoanTypeService {
             new LoanApplicationDaoImpl();
     @Override
     public void addLoanType(LoanType loanType) {
+        if (loanType.getName() == null ||
+                loanType.getName().trim().isEmpty()) {
+            throw new ValidationException("Loan type name is required");
+        }
         if (loanType.getMinAmount() < 0) {
            throw new ValidationException(
                     "Minimum amount cannot be negative");
@@ -75,7 +79,11 @@ public class LoanTypeServiceImpl implements LoanTypeService {
             throw new ValidationException(
                     "Maximum tenure must be greater than zero");
         }
-
+        if (loanType.getStatus() == null ||
+                (!"ACTIVE".equals(loanType.getStatus())
+                        && !"INACTIVE".equals(loanType.getStatus()))) {
+            throw new ValidationException("Invalid loan type status");
+        }
         loanTypeDao.updateLoanType(loanType);
     }
 

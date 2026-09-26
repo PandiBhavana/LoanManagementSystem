@@ -48,10 +48,15 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
             throw new BusinessException(
                     "Only Loan Officer can approve application");
         }
-
+        if (!"ACTIVE".equals(loanOfficer.getStatus())) {
+            throw new BusinessException("Loan Officer is inactive");
+        }
         application.setStatus("APPROVED");
         application.setReviewedBy(loanOfficerId);
         application.setRemarks(remarks);
+        application.setReviewedAt(
+                java.time.LocalDateTime.now().toString()
+        );
 
         loanApplicationDao.updateLoanApplication(application);
 
@@ -83,6 +88,9 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
             throw new BusinessException(
                     "Only Loan Officer can reject application");
         }
+        if (!"ACTIVE".equals(loanOfficer.getStatus())) {
+            throw new BusinessException("Loan Officer is inactive");
+        }
 
         if (remarks == null || remarks.trim().isEmpty()) {
             throw new ValidationException(
@@ -92,7 +100,9 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         application.setStatus("REJECTED");
         application.setReviewedBy(loanOfficerId);
         application.setRemarks(remarks);
-
+        application.setReviewedAt(
+                java.time.LocalDateTime.now().toString()
+        );
         loanApplicationDao.updateLoanApplication(application);
 
         logger.info("Loan application rejected successfully");
