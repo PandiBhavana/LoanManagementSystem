@@ -19,6 +19,7 @@ public class UserDaoImpl implements UserDao {
     private static final String statement2 = "UPDATE users SET username=?, password=?, role=?, status=? WHERE user_id=?";
      private static final String statement3 = "DELETE FROM users WHERE user_id=?";
     private static final  String statement4 = "SELECT * FROM users WHERE username = ?";
+    private static final  String sql = "UPDATE users SET status=? WHERE user_id=?";
     @Override
     public void addUser(User user) {
 
@@ -38,6 +39,7 @@ public class UserDaoImpl implements UserDao {
 
         } catch (Exception e) {
             logger.error("Error while adding user", e);
+            throw new RuntimeException("Failed to add user", e);
         }
 
     }
@@ -70,6 +72,7 @@ public class UserDaoImpl implements UserDao {
 
         } catch (Exception e) {
             logger.error("Error while getting user", e);
+            throw new RuntimeException("Failed to get user", e);
         }
         return null;
     }
@@ -94,6 +97,7 @@ public class UserDaoImpl implements UserDao {
 
         } catch (Exception e) {
             logger.error("Error while updating user", e);
+            throw new RuntimeException("Failed to update user", e);
         }
 
     }
@@ -102,19 +106,23 @@ public class UserDaoImpl implements UserDao {
     public void deleteUser(int userId) {
 
 
+
+
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement3);
+            PreparedStatement ps = con.prepareStatement(sql);
 
-            ps.setInt(1, userId);
+            ps.setString(1, "INACTIVE");
+            ps.setInt(2, userId);
 
             ps.executeUpdate();
 
-            logger.info("User deleted successfully");
+            logger.info("User deactivated successfully");
 
         } catch (Exception e) {
-            logger.error("Error while deleting user", e);
+            logger.error("Error while deactivating user", e);
+            throw new RuntimeException("Failed to deactivate user", e);
         }
     }
 
@@ -145,6 +153,8 @@ public class UserDaoImpl implements UserDao {
 
         } catch (Exception e) {
             logger.error("Error while getting user by username", e);
+            throw new RuntimeException("Failed to get user by username", e);
+
         }
 
         return null;

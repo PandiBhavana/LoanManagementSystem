@@ -101,6 +101,19 @@ import com.loanmanagement.service.impl.*;
             public LoanApplication getApplicationById(int applicationId) {
                 return loanApplicationService.getApplicationById(applicationId);
             }
+            public void approveApplication(int applicationId,
+                                           int loanOfficerId,
+                                           String remarks) {
+                loanApplicationService.approveApplication(
+                        applicationId, loanOfficerId, remarks);
+            }
+
+            public void rejectApplication(int applicationId,
+                                          int loanOfficerId,
+                                          String remarks) {
+                loanApplicationService.rejectApplication(
+                        applicationId, loanOfficerId, remarks);
+            }
 
             public void updateApplication(LoanApplication application) {
                 loanApplicationService.updateApplication(application);

@@ -19,6 +19,43 @@ public class LoanDaoImpl implements LoanDao {
             "interest_rate, tenure_months, total_payable, outstanding_amount, " +
             "start_date, status, created_by) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String sql = "SELECT * FROM loans WHERE application_id=?";
+
+    @Override
+    public Loan getLoanByApplicationId(int applicationId) {
+        try (Connection con =new DBConnection().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, applicationId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Loan loan = new Loan();
+
+                loan.setLoanId(rs.getInt("loan_id"));
+                loan.setApplicationId(rs.getInt("application_id"));
+                loan.setCustomerId(rs.getInt("customer_id"));
+                loan.setLoanTypeId(rs.getInt("loan_type_id"));
+                loan.setPrincipalAmount(rs.getDouble("principal_amount"));
+                loan.setInterestRate(rs.getDouble("interest_rate"));
+                loan.setTenureMonths(rs.getInt("tenure_months"));
+                loan.setTotalPayable(rs.getDouble("total_payable"));
+                loan.setOutstandingAmount(rs.getDouble("outstanding_amount"));
+                loan.setStartDate(rs.getString("start_date"));
+                loan.setStatus(rs.getString("status"));
+                loan.setCreatedBy(rs.getInt("created_by"));
+
+                return loan;
+            }
+
+        } catch (Exception e) {
+            logger.error("Error while getting loan by application ID", e);
+            throw new RuntimeException("Failed to get loan by application ID", e);
+        }
+        return null;
+    }
+
     private static final  String statement1 = "SELECT * FROM loans WHERE loan_id = ?";
     private static final  String statement2 = "UPDATE loans SET " +
             "application_id=?, customer_id=?, loan_type_id=?, " +
@@ -52,6 +89,7 @@ public class LoanDaoImpl implements LoanDao {
 
         } catch (Exception e) {
             logger.error("error while adding loan", e);
+            throw new RuntimeException("Failed to add loan", e);
         }
     }
 
@@ -88,6 +126,7 @@ public class LoanDaoImpl implements LoanDao {
             }
         } catch (Exception e) {
             logger.error("error while getting loan", e);
+            throw new RuntimeException("Failed to get loan", e);
         }
         return null;
     }
@@ -120,7 +159,7 @@ public class LoanDaoImpl implements LoanDao {
 
         } catch (Exception e) {
             logger.error("error while updating Loan", e);
-
+            throw new RuntimeException("Failed to update loan", e);
 
         }
     }
@@ -141,6 +180,7 @@ public class LoanDaoImpl implements LoanDao {
 
             } catch (Exception e) {
                 logger.error("error while deleting Loan", e);
+                throw new RuntimeException("Failed to delete loan", e);
             }
         }
 

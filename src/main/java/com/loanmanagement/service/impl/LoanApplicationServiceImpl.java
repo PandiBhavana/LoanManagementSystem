@@ -24,6 +24,81 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     private LoanApplicationDao loanApplicationDao =
             new LoanApplicationDaoImpl();
 
+    @Override
+    public void approveApplication(int applicationId, int loanOfficerId, String remarks) {
+        LoanApplication application =
+                loanApplicationDao.getLoanApplicationById(applicationId);
+
+        if (application == null) {
+            throw new NotFoundException("Application not found");
+        }
+
+        if (!"PENDING".equals(application.getStatus())) {
+            throw new BusinessException(
+                    "Only pending applications can be approved");
+        }
+
+        User loanOfficer = userDao.getUserById(loanOfficerId);
+
+        if (loanOfficer == null) {
+            throw new NotFoundException("Loan Officer not found");
+        }
+
+        if (!"LOAN_OFFICER".equals(loanOfficer.getRole())) {
+            throw new BusinessException(
+                    "Only Loan Officer can approve application");
+        }
+
+        application.setStatus("APPROVED");
+        application.setReviewedBy(loanOfficerId);
+        application.setRemarks(remarks);
+
+        loanApplicationDao.updateLoanApplication(application);
+
+        logger.info("Loan application approved successfully");
+
+    }
+
+    @Override
+    public void rejectApplication(int applicationId, int loanOfficerId, String remarks) {
+        LoanApplication application =
+                loanApplicationDao.getLoanApplicationById(applicationId);
+
+        if (application == null) {
+            throw new NotFoundException("Application not found");
+        }
+
+        if (!"PENDING".equals(application.getStatus())) {
+            throw new BusinessException(
+                    "Only pending applications can be rejected");
+        }
+
+        User loanOfficer = userDao.getUserById(loanOfficerId);
+
+        if (loanOfficer == null) {
+            throw new NotFoundException("Loan Officer not found");
+        }
+
+        if (!"LOAN_OFFICER".equals(loanOfficer.getRole())) {
+            throw new BusinessException(
+                    "Only Loan Officer can reject application");
+        }
+
+        if (remarks == null || remarks.trim().isEmpty()) {
+            throw new ValidationException(
+                    "Rejection remarks are required");
+        }
+
+        application.setStatus("REJECTED");
+        application.setReviewedBy(loanOfficerId);
+        application.setRemarks(remarks);
+
+        loanApplicationDao.updateLoanApplication(application);
+
+        logger.info("Loan application rejected successfully");
+
+    }
+
     private LoanTypeDao loanTypeDao =
             new LoanTypeDaoImpl();
     private UserDao userDao = new UserDaoImpl();
@@ -82,26 +157,12 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
             throw new BusinessException(
                     "Only pending applications can be updated");
         }
-        if (!"APPROVED".equals(application.getStatus())
-                && !"REJECTED".equals(application.getStatus())) {
 
-            throw new BusinessException(
-                    "Application can only be approved or rejected");
-        }
-        User reviewer = userDao.getUserById(application.getReviewedBy());
-
-        if (reviewer == null) {
-            throw new NotFoundException("Reviewer not found");
-        }
-
-
-        if (!"LOAN_OFFICER".equals(reviewer.getRole())) {
-            throw new BusinessException(
-                    "Only Loan Officer can approve or reject application");
-        }
-
+        // Keep status as PENDING during normal update
+        application.setStatus(existingApplication.getStatus());
 
         loanApplicationDao.updateLoanApplication(application);
+
         logger.info("Loan application updated successfully");
     }
 

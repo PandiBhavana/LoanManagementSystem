@@ -3,15 +3,18 @@ package com.loanmanagement.service.impl;
 import com.loanmanagement.dao.LoanApplicationDao;
 import com.loanmanagement.dao.LoanDao;
 import com.loanmanagement.dao.LoanTypeDao;
+import com.loanmanagement.dao.UserDao;
 import com.loanmanagement.dao.impl.LoanApplicationDaoImpl;
 import com.loanmanagement.dao.impl.LoanDaoImpl;
 import com.loanmanagement.dao.impl.LoanTypeDaoImpl;
+import com.loanmanagement.dao.impl.UserDaoImpl;
 import com.loanmanagement.exception.BusinessException;
 import com.loanmanagement.exception.NotFoundException;
 import com.loanmanagement.exception.ValidationException;
 import com.loanmanagement.model.Loan;
 import com.loanmanagement.model.LoanApplication;
 import com.loanmanagement.model.LoanType;
+import com.loanmanagement.model.User;
 import com.loanmanagement.service.LoanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +26,7 @@ public class LoanServiceImpl implements LoanService {
     private LoanApplicationDao loanApplicationDao =
             new LoanApplicationDaoImpl();
    private LoanTypeDao loanTypeDao=new LoanTypeDaoImpl();
+    private UserDao userDao = new UserDaoImpl();
     @Override
     public void addLoan(Loan loan) {
 
@@ -38,6 +42,23 @@ public class LoanServiceImpl implements LoanService {
         if (!"APPROVED".equals(application.getStatus())) {
             throw new BusinessException(
                     "Loan can be created only from an approved application");
+        }
+        Loan existingLoan =
+                loanDao.getLoanByApplicationId(loan.getApplicationId());
+
+        if (existingLoan != null) {
+            throw new BusinessException(
+                    "A loan already exists for this application");
+        }
+        User loanOfficer = userDao.getUserById(loan.getCreatedBy());
+
+        if (loanOfficer == null) {
+            throw new NotFoundException("Loan Officer not found");
+        }
+
+        if (!"LOAN_OFFICER".equals(loanOfficer.getRole())) {
+            throw new BusinessException(
+                    "Only Loan Officer can create a loan");
         }
 
         LoanType loanType =

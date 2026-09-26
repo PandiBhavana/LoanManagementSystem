@@ -11,11 +11,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class LoanApplicationDaoImpl implements LoanApplicationDao {
-
     private static final Logger logger =
             LoggerFactory.getLogger(LoanApplicationDaoImpl.class);
 
-   private static final String statement = "INSERT INTO loan_applications " +
+    private static final String statement = "INSERT INTO loan_applications " +
             "(customer_id, loan_type_id, requested_amount, tenure_months, purpose, status, remarks) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String statement1 = "SELECT * FROM loan_applications WHERE application_id = ?";
@@ -25,6 +24,30 @@ public class LoanApplicationDaoImpl implements LoanApplicationDao {
             "reviewed_by=?, reviewed_at=? " +
             "WHERE application_id=?";
     private static final String statement3 = "DELETE FROM loan_applications WHERE application_id=?";
+    private static final String sql = "SELECT COUNT(*) FROM loan_applications WHERE loan_type_id=?";
+    private LoanApplicationDao loanApplicationDao =
+            new LoanApplicationDaoImpl();
+    @Override
+    public boolean existsByLoanTypeId(int loanTypeId) {
+        try (Connection con = new DBConnection().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, loanTypeId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (Exception e) {
+            logger.error("Error while checking loan type usage", e);
+            throw new RuntimeException("Failed to check loan type usage", e);
+        }
+        return false;
+    }
+
+
 
     @Override
     public void addLoanApplication(LoanApplication application) {
@@ -49,6 +72,7 @@ public class LoanApplicationDaoImpl implements LoanApplicationDao {
 
         } catch (Exception e) {
             logger.error("error while adding Loan application", e);
+            throw new RuntimeException("Failed to add loan application", e);
         }
     }
 
@@ -85,6 +109,7 @@ public class LoanApplicationDaoImpl implements LoanApplicationDao {
 
         } catch (Exception e) {
             logger.error("error while getting loan application ", e);
+            throw new RuntimeException("Failed to get loan application", e);
         }
 
         return null;
@@ -114,6 +139,7 @@ public class LoanApplicationDaoImpl implements LoanApplicationDao {
 
         } catch (Exception e) {
             logger.error("error while updating Loan Application", e);
+            throw new RuntimeException("Failed to update loan application", e);
         }
 
     }
@@ -134,6 +160,7 @@ public class LoanApplicationDaoImpl implements LoanApplicationDao {
 
         } catch (Exception e) {
             logger.error("error while deleting Loan Application", e);
+            throw new RuntimeException("Failed to delete loan application", e);
         }
     }
 

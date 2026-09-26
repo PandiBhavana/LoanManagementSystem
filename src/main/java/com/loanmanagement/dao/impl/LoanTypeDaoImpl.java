@@ -47,6 +47,7 @@ public class LoanTypeDaoImpl implements LoanTypeDao {
 
         } catch (Exception e) {
             logger.error("error while adding LoanType", e);
+            throw new RuntimeException("Failed to add loan type", e);
         }
     }
 
@@ -79,6 +80,7 @@ public class LoanTypeDaoImpl implements LoanTypeDao {
 
         } catch (Exception e) {
             logger.error("error while getting LoanType", e);
+            throw new RuntimeException("Failed to get loan type", e);
         }
 
         return null;
@@ -108,6 +110,7 @@ public class LoanTypeDaoImpl implements LoanTypeDao {
 
         } catch (Exception e) {
             logger.error("error while updating LoanType", e);
+            throw new RuntimeException("Failed to update loan type", e);
         }
     }
 
@@ -129,6 +132,7 @@ public class LoanTypeDaoImpl implements LoanTypeDao {
 
         } catch (Exception e) {
             logger.error("error while deleting loanType", e);
+            throw new RuntimeException("Failed to delete loan type", e);
         }
     }
 }

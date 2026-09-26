@@ -10,4 +10,5 @@ public interface LoanApplicationDao {
     void updateLoanApplication(LoanApplication application);
 
     void deleteLoanApplication(int applicationId);
+    boolean existsByLoanTypeId(int loanTypeId);
 }

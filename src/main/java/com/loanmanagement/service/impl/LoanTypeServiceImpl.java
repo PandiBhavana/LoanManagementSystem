@@ -1,7 +1,10 @@
 package com.loanmanagement.service.impl;
 
+import com.loanmanagement.dao.LoanApplicationDao;
 import com.loanmanagement.dao.LoanTypeDao;
+import com.loanmanagement.dao.impl.LoanApplicationDaoImpl;
 import com.loanmanagement.dao.impl.LoanTypeDaoImpl;
+import com.loanmanagement.exception.NotFoundException;
 import com.loanmanagement.exception.ValidationException;
 import com.loanmanagement.model.LoanType;
 import com.loanmanagement.service.LoanTypeService;
@@ -9,7 +12,8 @@ import com.loanmanagement.service.LoanTypeService;
 public class LoanTypeServiceImpl implements LoanTypeService {
 
     private LoanTypeDao loanTypeDao = new LoanTypeDaoImpl();
-
+    private LoanApplicationDao loanApplicationDao =
+            new LoanApplicationDaoImpl();
     @Override
     public void addLoanType(LoanType loanType) {
         if (loanType.getMinAmount() < 0) {
@@ -77,6 +81,21 @@ public class LoanTypeServiceImpl implements LoanTypeService {
 
     @Override
     public void deleteLoanType(int loanTypeId) {
-        loanTypeDao.deleteLoanType(loanTypeId);
+
+
+            LoanType loanType = loanTypeDao.getLoanTypeById(loanTypeId);
+
+            if (loanType == null) {
+                throw new NotFoundException("Loan type not found");
+            }
+
+            if (loanApplicationDao.existsByLoanTypeId(loanTypeId)) {
+                loanType.setStatus("INACTIVE");
+                loanTypeDao.updateLoanType(loanType);
+                return;
+            }
+
+            loanTypeDao.deleteLoanType(loanTypeId);
+
     }
 }
