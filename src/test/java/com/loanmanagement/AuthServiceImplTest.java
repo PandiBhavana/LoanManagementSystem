@@ -20,7 +20,7 @@ public class AuthServiceImplTest {
 
         AuthServiceImpl authService = new AuthServiceImpl();
 
-        boolean result = authService.login("YOUR_USERNAME", "wrongPassword");
+        boolean result = authService.login("deepthi", "wrongPassword");
 
         assertFalse(result);
     }
@@ -29,7 +29,7 @@ public class AuthServiceImplTest {
 
         AuthServiceImpl authService = new AuthServiceImpl();
 
-        boolean result = authService.login("INACTIVE_USERNAME", "PASSWORD");
+        boolean result = authService.login("inactive_test_user", "PASSWORD");
 
         assertFalse(result);
     }

@@ -5,6 +5,8 @@ import com.loanmanagement.service.CustomerService;
 import com.loanmanagement.service.impl.CustomerServiceImpl;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class CustomerServiceImplTest {
     private CustomerService customerService =
             new CustomerServiceImpl();
@@ -58,6 +60,34 @@ public class CustomerServiceImplTest {
     @Test
     public void testDeleteCustomer() {
 
-        customerService.deleteCustomer(1);
+        customerService.deleteCustomer(999);
     }
+    @Test
+    public void testAddCustomerWithInvalidEmail() {
+
+        Customer customer = new Customer();
+
+        customer.setFullName("Invalid Email Customer");
+        customer.setEmail("invalid-email");
+        customer.setPhone("9876543210");
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            customerService.addCustomer(customer);
+        });
+    }
+
+    @Test
+    public void testAddCustomerWithInvalidPhone() {
+
+        Customer customer = new Customer();
+
+        customer.setFullName("Invalid Phone Customer");
+        customer.setEmail("test@gmail.com");
+        customer.setPhone("12345");
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            customerService.addCustomer(customer);
+        });
+    }
+
 }

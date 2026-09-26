@@ -5,6 +5,8 @@ import com.loanmanagement.service.LoanApplicationService;
 import com.loanmanagement.service.impl.LoanApplicationServiceImpl;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class LoanApplicationServiceImplTest {
     private LoanApplicationService loanApplicationService =
             new LoanApplicationServiceImpl();
@@ -42,14 +44,28 @@ public class LoanApplicationServiceImplTest {
         application.setRequestedAmount(250000);
         application.setRemarks("Updated through service");
         application.setReviewedBy(1);
-
+        application.setStatus("APPROVED");
         loanApplicationService.updateApplication(application);
     }
     @Test
     public void testDeleteLoanApplication() {
 
-        loanApplicationService.deleteApplication(2);
+        loanApplicationService.deleteApplication(9999);
     }
 
+    @Test
+    public void testAddApplicationWithInvalidAmount() {
 
+        LoanApplication application = new LoanApplication();
+
+        application.setCustomerId(1);
+        application.setLoanTypeId(2);
+        application.setRequestedAmount(10000000);
+        application.setTenureMonths(24);
+        application.setPurpose("Invalid amount test");
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            loanApplicationService.addApplication(application);
+        });
+    }
 }

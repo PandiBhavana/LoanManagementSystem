@@ -49,6 +49,6 @@ public class LoanServiceImplTest {
     @Test
     public void testDeleteLoan() {
 
-        loanService.deleteLoan(4);
+        loanService.deleteLoan(9999);
     }
 }
