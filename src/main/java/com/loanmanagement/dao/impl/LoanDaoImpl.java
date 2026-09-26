@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class LoanDaoImpl implements LoanDao {
 
@@ -21,40 +22,7 @@ public class LoanDaoImpl implements LoanDao {
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String sql = "SELECT * FROM loans WHERE application_id=?";
 
-    @Override
-    public Loan getLoanByApplicationId(int applicationId) {
-        try (Connection con =new DBConnection().getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, applicationId);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                Loan loan = new Loan();
-
-                loan.setLoanId(rs.getInt("loan_id"));
-                loan.setApplicationId(rs.getInt("application_id"));
-                loan.setCustomerId(rs.getInt("customer_id"));
-                loan.setLoanTypeId(rs.getInt("loan_type_id"));
-                loan.setPrincipalAmount(rs.getDouble("principal_amount"));
-                loan.setInterestRate(rs.getDouble("interest_rate"));
-                loan.setTenureMonths(rs.getInt("tenure_months"));
-                loan.setTotalPayable(rs.getDouble("total_payable"));
-                loan.setOutstandingAmount(rs.getDouble("outstanding_amount"));
-                loan.setStartDate(rs.getString("start_date"));
-                loan.setStatus(rs.getString("status"));
-                loan.setCreatedBy(rs.getInt("created_by"));
-
-                return loan;
-            }
-
-        } catch (Exception e) {
-            logger.error("Error while getting loan by application ID", e);
-            throw new RuntimeException("Failed to get loan by application ID", e);
-        }
-        return null;
-    }
 
     private static final  String statement1 = "SELECT * FROM loans WHERE loan_id = ?";
     private static final  String statement2 = "UPDATE loans SET " +
@@ -69,8 +37,10 @@ public class LoanDaoImpl implements LoanDao {
 
         try {
             Connection con = new DBConnection().getConnection();
-            PreparedStatement ps = con.prepareStatement(statement);
-
+            PreparedStatement ps = con.prepareStatement(
+                    statement,
+                    Statement.RETURN_GENERATED_KEYS
+            );
             ps.setInt(1, loan.getApplicationId());
             ps.setInt(2, loan.getCustomerId());
             ps.setInt(3, loan.getLoanTypeId());
@@ -84,6 +54,11 @@ public class LoanDaoImpl implements LoanDao {
             ps.setInt(11, loan.getCreatedBy());
 
             ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+
+            if (rs.next()) {
+                loan.setLoanId(rs.getInt(1));
+            }
 
             logger.info("Loan added successfully!");
 
@@ -183,6 +158,39 @@ public class LoanDaoImpl implements LoanDao {
                 throw new RuntimeException("Failed to delete loan", e);
             }
         }
+    @Override
+    public Loan getLoanByApplicationId(int applicationId) {
+        try (Connection con =new DBConnection().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
+            ps.setInt(1, applicationId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Loan loan = new Loan();
+
+                loan.setLoanId(rs.getInt("loan_id"));
+                loan.setApplicationId(rs.getInt("application_id"));
+                loan.setCustomerId(rs.getInt("customer_id"));
+                loan.setLoanTypeId(rs.getInt("loan_type_id"));
+                loan.setPrincipalAmount(rs.getDouble("principal_amount"));
+                loan.setInterestRate(rs.getDouble("interest_rate"));
+                loan.setTenureMonths(rs.getInt("tenure_months"));
+                loan.setTotalPayable(rs.getDouble("total_payable"));
+                loan.setOutstandingAmount(rs.getDouble("outstanding_amount"));
+                loan.setStartDate(rs.getString("start_date"));
+                loan.setStatus(rs.getString("status"));
+                loan.setCreatedBy(rs.getInt("created_by"));
+
+                return loan;
+            }
+
+        } catch (Exception e) {
+            logger.error("Error while getting loan by application ID", e);
+            throw new RuntimeException("Failed to get loan by application ID", e);
+        }
+        return null;
+    }
     }
 

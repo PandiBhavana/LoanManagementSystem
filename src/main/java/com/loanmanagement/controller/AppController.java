@@ -4,8 +4,10 @@ import com.loanmanagement.model.*;
 import com.loanmanagement.service.*;
 import com.loanmanagement.service.impl.*;
 
+import java.util.Scanner;
 
-        public class AppController {
+
+public class AppController {
 
             private final UserService userService =
                     new UserServiceImpl();
@@ -146,8 +148,107 @@ import com.loanmanagement.service.impl.*;
                 AppController controller = new AppController();
 
                 System.out.println("Loan Management System started successfully.");
+
+                    Scanner scanner = new Scanner(System.in);
+
+
+                    //  LOGIN //
+                    System.out.println("===== LOAN MANAGEMENT SYSTEM =====");
+
+                    System.out.print("Username: ");
+                    String username = scanner.nextLine();
+
+                    System.out.print("Password: ");
+                    String password = scanner.nextLine();
+
+                    boolean login = controller.login(username, password);
+
+                    if (!login) {
+                        System.out.println("Login failed.");
+                        scanner.close();
+                        return;
+                    }
+
+                    System.out.println("Login successful!");
+
+                    //  LOAN APPLICATION //
+
+                    System.out.println("\n===== APPLY FOR LOAN =====");
+
+                    System.out.print("Customer ID: ");
+                    int customerId = scanner.nextInt();
+
+                    System.out.print("Loan Type ID: ");
+                    int loanTypeId = scanner.nextInt();
+
+                    System.out.print("Requested Amount: ");
+                    double amount = scanner.nextDouble();
+
+                    System.out.print("Tenure (months): ");
+                    int tenure = scanner.nextInt();
+
+                    scanner.nextLine();
+
+                    System.out.print("Purpose: ");
+                    String purpose = scanner.nextLine();
+
+                    LoanApplication application = new LoanApplication();
+
+                    application.setCustomerId(customerId);
+                    application.setLoanTypeId(loanTypeId);
+                    application.setRequestedAmount(amount);
+                    application.setTenureMonths(tenure);
+                    application.setPurpose(purpose);
+
+                    controller.addApplication(application);
+
+                    System.out.println("Loan application created.");
+                    System.out.println("Application Status: PENDING");
+                    System.out.println("Application ID: "
+                            + application.getApplicationId());
+
+                    // APPROVAL
+
+                    System.out.println("\n===== LOAN APPROVAL =====");
+
+                    System.out.print("Loan Officer ID: ");
+                    int loanOfficerId = scanner.nextInt();
+
+                    scanner.nextLine();
+
+                    System.out.print("Approval Remarks: ");
+                    String remarks = scanner.nextLine();
+
+                    controller.approveApplication(
+                            application.getApplicationId(),
+                            loanOfficerId,
+                            remarks
+                    );
+
+                    System.out.println("Loan application approved.");
+
+                    //  LOAN CREATION
+
+                    System.out.println("\n===== CREATE LOAN =====");
+
+                    Loan loan = new Loan();
+
+                    loan.setApplicationId(application.getApplicationId());
+                    loan.setCreatedBy(loanOfficerId);
+
+                    controller.addLoan(loan);
+
+                    System.out.println("Loan created successfully!");
+                    System.out.println("Loan ID: " + loan.getLoanId());
+                    System.out.println("Principal Amount: "
+                            + loan.getPrincipalAmount());
+                    System.out.println("Loan Status: "
+                            + loan.getStatus());
+
+                    scanner.close();
+                }
             }
-        }
+
 
 
 

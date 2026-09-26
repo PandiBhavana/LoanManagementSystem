@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class LoanApplicationDaoImpl implements LoanApplicationDao {
     private static final Logger logger =
@@ -25,25 +26,7 @@ public class LoanApplicationDaoImpl implements LoanApplicationDao {
             "WHERE application_id=?";
     private static final String statement3 = "DELETE FROM loan_applications WHERE application_id=?";
     private static final String sql = "SELECT COUNT(*) FROM loan_applications WHERE loan_type_id=?";
-    @Override
-    public boolean existsByLoanTypeId(int loanTypeId) {
-        try (Connection con = new DBConnection().getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, loanTypeId);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-
-        } catch (Exception e) {
-            logger.error("Error while checking loan type usage", e);
-            throw new RuntimeException("Failed to check loan type usage", e);
-        }
-        return false;
-    }
 
 
 
@@ -54,8 +37,10 @@ public class LoanApplicationDaoImpl implements LoanApplicationDao {
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement);
-
+            PreparedStatement ps = con.prepareStatement(
+                    statement,
+                    Statement.RETURN_GENERATED_KEYS
+            );
             ps.setInt(1, application.getCustomerId());
             ps.setInt(2, application.getLoanTypeId());
             ps.setDouble(3, application.getRequestedAmount());
@@ -65,6 +50,11 @@ public class LoanApplicationDaoImpl implements LoanApplicationDao {
             ps.setString(7, application.getRemarks());
 
             ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+
+            if (rs.next()) {
+                application.setApplicationId(rs.getInt(1));
+            }
 
             logger.info("Loan application added successfully!");
 
@@ -160,6 +150,25 @@ public class LoanApplicationDaoImpl implements LoanApplicationDao {
             logger.error("error while deleting Loan Application", e);
             throw new RuntimeException("Failed to delete loan application", e);
         }
+    }
+    @Override
+    public boolean existsByLoanTypeId(int loanTypeId) {
+        try (Connection con = new DBConnection().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, loanTypeId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (Exception e) {
+            logger.error("Error while checking loan type usage", e);
+            throw new RuntimeException("Failed to check loan type usage", e);
+        }
+        return false;
     }
 
     }
