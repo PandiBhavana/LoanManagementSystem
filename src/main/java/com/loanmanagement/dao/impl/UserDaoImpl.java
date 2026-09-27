@@ -6,9 +6,7 @@ import com.loanmanagement.util.DBConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 public class UserDaoImpl implements UserDao {
     private static final Logger logger =
@@ -20,30 +18,47 @@ public class UserDaoImpl implements UserDao {
      private static final String statement3 = "DELETE FROM users WHERE user_id=?";
     private static final  String statement4 = "SELECT * FROM users WHERE username = ?";
     private static final  String sql = "UPDATE users SET status=? WHERE user_id=?";
-    @Override
-    public void addUser(User user) {
 
-        try {
-            Connection con = new DBConnection().getConnection();
+          @Override
+        public void addUser(User user) {
+              try (Connection con = new DBConnection().getConnection();
+                   PreparedStatement ps =
+                           con.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
 
-            PreparedStatement ps = con.prepareStatement(statement);
+                  ps.setString(1, user.getUsername());
+                  ps.setString(2, user.getPassword());
+                  ps.setString(3, user.getRole());
 
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-            ps.setString(3, user.getRole());
-            ps.setString(4, user.getStatus());
+                  if (user.getStatus() == null ||
+                          user.getStatus().trim().isEmpty()) {
 
-            ps.executeUpdate();
+                      user.setStatus("ACTIVE");
+                  }
 
-            logger.info("User added successfully");
+                  ps.setString(4, user.getStatus());
 
-        } catch (Exception e) {
-            logger.error("Error while adding user", e);
-            throw new RuntimeException("Failed to add user", e);
-        }
+                  ps.executeUpdate();
 
-    }
+                  // Get generated User ID
+                  try (ResultSet rs = ps.getGeneratedKeys()) {
 
+                      if (rs.next()) {
+
+                          int generatedUserId = rs.getInt(1);
+
+                          // Put generated ID back into User object
+                          user.setUserId(generatedUserId);
+                      }
+                  }
+
+              } catch (SQLException e) {
+
+                  logger.error("Error adding user", e);
+
+                  throw new RuntimeException("Unable to add user", e);
+              }
+
+          }
     @Override
     public User getUserById(int userId) {
 

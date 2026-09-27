@@ -9,245 +9,177 @@ import java.util.Scanner;
 
 public class AppController {
 
-            private final UserService userService =
-                    new UserServiceImpl();
+    private final UserService userService =
+            new UserServiceImpl();
 
-            private final LoanTypeService loanTypeService =
-                    new LoanTypeServiceImpl();
+    private final LoanTypeService loanTypeService =
+            new LoanTypeServiceImpl();
 
-            private final CustomerService customerService =
-                    new CustomerServiceImpl();
+    private final CustomerService customerService =
+            new CustomerServiceImpl();
 
-            private final LoanApplicationService loanApplicationService =
-                    new LoanApplicationServiceImpl();
+    private final LoanApplicationService loanApplicationService =
+            new LoanApplicationServiceImpl();
 
-            private final LoanService loanService =
-                    new LoanServiceImpl();
-            private final AuthService authService =
-                    new AuthServiceImpl();
-            // Authentication
+    private final LoanService loanService =
+            new LoanServiceImpl();
+    private final AuthService authService =
+            new AuthServiceImpl();
+    // Authentication
 
-            public boolean login(String username, String password) {
-                return authService.login(username, password);
-            }
+    public boolean login(String username, String password) {
 
-            public void logout(int userId) {
-                authService.logout(userId);
-            }
+        return authService.login(username, password);
+    }
 
-            // User Management
+    public void logout(int userId) {
 
-            public void addUser(User user) {
-                userService.addUser(user);
-            }
+        authService.logout(userId);
+    }
 
-            public User getUserById(int userId) {
-                return userService.getUserById(userId);
-            }
+    // User Management
 
-            public void updateUser(User user) {
-                userService.updateUser(user);
-            }
+    public void addUser(User user) {
 
-            public void deleteUser(int userId) {
-                userService.deleteUser(userId);
-            }
+        userService.addUser(user);
+    }
 
+    public User getUserById(int userId) {
 
-            // Loan Type Management
+        return userService.getUserById(userId);
+    }
 
-            public void addLoanType(LoanType loanType) {
-                loanTypeService.addLoanType(loanType);
-            }
+    public void updateUser(User user) {
 
-            public LoanType getLoanTypeById(int loanTypeId) {
-                return loanTypeService.getLoanTypeById(loanTypeId);
-            }
+        userService.updateUser(user);
+    }
 
-            public void updateLoanType(LoanType loanType) {
-                loanTypeService.updateLoanType(loanType);
-            }
+    public void deleteUser(int userId) {
 
-            public void deleteLoanType(int loanTypeId) {
-                loanTypeService.deleteLoanType(loanTypeId);
-            }
+        userService.deleteUser(userId);
+    }
 
 
-            // Customer Management
+    // Loan Type Management
 
-            public void addCustomer(Customer customer) {
-                customerService.addCustomer(customer);
-            }
+    public void addLoanType(LoanType loanType) {
 
-            public Customer getCustomerById(int customerId) {
-                return customerService.getCustomerById(customerId);
-            }
 
-            public void updateCustomer(Customer customer) {
-                customerService.updateCustomer(customer);
-            }
+        loanTypeService.addLoanType(loanType);
+    }
 
-            public void deleteCustomer(int customerId) {
-                customerService.deleteCustomer(customerId);
-            }
+    public LoanType getLoanTypeById(int loanTypeId) {
 
+        return loanTypeService.getLoanTypeById(loanTypeId);
+    }
 
-            // Loan Application Management
+    public void updateLoanType(LoanType loanType) {
 
-            public void addApplication(LoanApplication application) {
-                loanApplicationService.addApplication(application);
-            }
+        loanTypeService.updateLoanType(loanType);
+    }
 
-            public LoanApplication getApplicationById(int applicationId) {
-                return loanApplicationService.getApplicationById(applicationId);
-            }
-            public void approveApplication(int applicationId,
-                                           int loanOfficerId,
-                                           String remarks) {
-                loanApplicationService.approveApplication(
-                        applicationId, loanOfficerId, remarks);
-            }
+    public void deleteLoanType(int loanTypeId) {
 
-            public void rejectApplication(int applicationId,
-                                          int loanOfficerId,
-                                          String remarks) {
-                loanApplicationService.rejectApplication(
-                        applicationId, loanOfficerId, remarks);
-            }
+        loanTypeService.deleteLoanType(loanTypeId);
+    }
 
-            public void updateApplication(LoanApplication application) {
-                loanApplicationService.updateApplication(application);
-            }
 
-            public void deleteApplication(int applicationId) {
-                loanApplicationService.deleteApplication(applicationId);
-            }
+    // Customer Management
 
+    public void addCustomer(Customer customer) {
+        customerService.addCustomer(customer);
+    }
 
-            // Loan Management
+    public Customer getCustomerById(int customerId) {
 
-            public void addLoan(Loan loan) {
-                loanService.addLoan(loan);
-            }
+        return customerService.getCustomerById(customerId);
+    }
 
-            public Loan getLoanById(int loanId) {
-                return loanService.getLoanById(loanId);
-            }
+    public void updateCustomer(Customer customer) {
+        customerService.updateCustomer(customer);
+    }
 
-            public void updateLoan(Loan loan) {
-                loanService.updateLoan(loan);
-            }
+    public void deleteCustomer(int customerId) {
 
-            public void deleteLoan(int loanId) {
-                loanService.deleteLoan(loanId);
-            }
+        customerService.deleteCustomer(customerId);
+    }
 
 
-            public static void main(String[] args) {
+    // Loan Application Management
 
-                AppController controller = new AppController();
+    public void addApplication(LoanApplication application) {
+        loanApplicationService.addApplication(application);
+    }
 
-                System.out.println("Loan Management System started successfully.");
+    public LoanApplication getApplicationById(int applicationId) {
+        return loanApplicationService.getApplicationById(applicationId);
+    }
 
-                    Scanner scanner = new Scanner(System.in);
+    public void approveApplication(int applicationId,
+                                   int loanOfficerId,
+                                   String remarks) {
+        loanApplicationService.approveApplication(
+                applicationId, loanOfficerId, remarks);
+    }
 
+    public void rejectApplication(int applicationId,
+                                  int loanOfficerId,
+                                  String remarks) {
+        loanApplicationService.rejectApplication(
+                applicationId, loanOfficerId, remarks);
+    }
 
-                    //  LOGIN //
-                    System.out.println("===== LOAN MANAGEMENT SYSTEM =====");
+    public void updateApplication(LoanApplication application) {
+        loanApplicationService.updateApplication(application);
+    }
 
-                    System.out.print("Username: ");
-                    String username = scanner.nextLine();
+    public void deleteApplication(int applicationId) {
+        loanApplicationService.deleteApplication(applicationId);
+    }
 
-                    System.out.print("Password: ");
-                    String password = scanner.nextLine();
 
-                    boolean login = controller.login(username, password);
+    // Loan Management
 
-                    if (!login) {
-                        System.out.println("Login failed.");
-                        scanner.close();
-                        return;
-                    }
+    public void addLoan(Loan loan) {
 
-                    System.out.println("Login successful!");
+        loanService.addLoan(loan);
+    }
 
-                    //  LOAN APPLICATION //
+    public Loan getLoanById(int loanId) {
 
-                    System.out.println("\n===== APPLY FOR LOAN =====");
+        return loanService.getLoanById(loanId);
+    }
 
-                    System.out.print("Customer ID: ");
-                    int customerId = scanner.nextInt();
+    public void updateLoan(Loan loan) {
 
-                    System.out.print("Loan Type ID: ");
-                    int loanTypeId = scanner.nextInt();
+        loanService.updateLoan(loan);
+    }
 
-                    System.out.print("Requested Amount: ");
-                    double amount = scanner.nextDouble();
+    public void deleteLoan(int loanId) {
 
-                    System.out.print("Tenure (months): ");
-                    int tenure = scanner.nextInt();
+        loanService.deleteLoan(loanId);
+    }
 
-                    scanner.nextLine();
 
-                    System.out.print("Purpose: ");
-                    String purpose = scanner.nextLine();
+    public static void main(String[] args) {
 
-                    LoanApplication application = new LoanApplication();
+        AppController controller = new AppController();
 
-                    application.setCustomerId(customerId);
-                    application.setLoanTypeId(loanTypeId);
-                    application.setRequestedAmount(amount);
-                    application.setTenureMonths(tenure);
-                    application.setPurpose(purpose);
+        System.out.println("Loan Management System started successfully.");
 
-                    controller.addApplication(application);
+        Scanner sc = new Scanner(System.in);
 
-                    System.out.println("Loan application created.");
-                    System.out.println("Application Status: PENDING");
-                    System.out.println("Application ID: "
-                            + application.getApplicationId());
 
-                    // APPROVAL
+        /
+    }
+}
 
-                    System.out.println("\n===== LOAN APPROVAL =====");
 
-                    System.out.print("Loan Officer ID: ");
-                    int loanOfficerId = scanner.nextInt();
 
-                    scanner.nextLine();
 
-                    System.out.print("Approval Remarks: ");
-                    String remarks = scanner.nextLine();
 
-                    controller.approveApplication(
-                            application.getApplicationId(),
-                            loanOfficerId,
-                            remarks
-                    );
 
-                    System.out.println("Loan application approved.");
 
-                    //  LOAN CREATION
-
-                    System.out.println("\n===== CREATE LOAN =====");
-
-                    Loan loan = new Loan();
-
-                    loan.setApplicationId(application.getApplicationId());
-                    loan.setCreatedBy(loanOfficerId);
-
-                    controller.addLoan(loan);
-
-                    System.out.println("Loan created successfully!");
-                    System.out.println("Loan ID: " + loan.getLoanId());
-                    System.out.println("Principal Amount: "
-                            + loan.getPrincipalAmount());
-                    System.out.println("Loan Status: "
-                            + loan.getStatus());
-
-                    scanner.close();
-                }
-            }
 
 
 

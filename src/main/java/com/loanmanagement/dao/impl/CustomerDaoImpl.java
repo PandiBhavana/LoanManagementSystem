@@ -31,11 +31,13 @@ public class CustomerDaoImpl implements CustomerDao {
     private static final String statement3="Delete FROM customers WHERE customer_id=?";
     @Override
     public void addCustomer(Customer customer) {
-
         try {
             Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement);
+            PreparedStatement ps = con.prepareStatement(
+                    statement,
+                    java.sql.Statement.RETURN_GENERATED_KEYS
+            );
 
             ps.setInt(1, customer.getUserId());
             ps.setString(2, customer.getFullName());
@@ -52,23 +54,33 @@ public class CustomerDaoImpl implements CustomerDao {
             ps.setString(13, customer.getBankName());
             ps.setString(14, customer.getKycStatus());
             ps.setString(15, customer.getKycRemarks());
-            ps.setInt(16, customer.getKycVerifiedBy());
-            ps.setString(17, customer.getKycVerifiedAt());
-            ps.setInt(18, customer.getCreditScore());
-            ps.setDouble(19, customer.getExistingEmi());
-            ps.setString(20, customer.getStatus());
+
             if (customer.getKycVerifiedBy() == null) {
                 ps.setNull(16, java.sql.Types.INTEGER);
             } else {
                 ps.setInt(16, customer.getKycVerifiedBy());
             }
 
+            ps.setString(17, customer.getKycVerifiedAt());
+            ps.setInt(18, customer.getCreditScore());
+            ps.setDouble(19, customer.getExistingEmi());
+            ps.setString(20, customer.getStatus());
+
             ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    customer.setCustomerId(rs.getInt(1));
+                }
+            }
+
             logger.info("Customer added successfully!");
+
         } catch (Exception e) {
-            logger.error("error while adding customer", e);
+            logger.error("Error while adding customer", e);
             throw new RuntimeException("Failed to add customer", e);
         }
+
     }
 
     @Override
