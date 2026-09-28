@@ -27,5 +27,12 @@ public class UserController {
     }
     public List<User> getAllUsers() {
         return userService.getAllUsers();
+
+    }
+
+
+
+    public User getUserByUsername(String username) {
+        return userService.getUserByUsername(username);
     }
 }

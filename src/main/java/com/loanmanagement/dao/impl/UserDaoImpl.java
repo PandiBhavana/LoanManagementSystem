@@ -143,39 +143,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    @Override
-    public User getUserByUsername(String username) {
-        try {
-            Connection con = new DBConnection().getConnection();
 
-            PreparedStatement ps = con.prepareStatement(statement4);
-
-            ps.setString(1, username);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-
-                User user = new User();
-
-                user.setUserId(rs.getInt("user_id"));
-                user.setUsername(rs.getString("username"));
-                user.setPassword(rs.getString("password"));
-                user.setRole(rs.getString("role"));
-                user.setStatus(rs.getString("status"));
-                user.setCreatedAt(rs.getString("created_at"));
-
-                return user;
-            }
-            return null;
-
-
-        } catch (Exception e) {
-            logger.error("Error while getting user by username", e);
-            throw new RuntimeException("Failed to get user by username", e);
-
-        }
-    }
         @Override
         public List<User> getAllUsers() {
 
@@ -211,7 +179,40 @@ public class UserDaoImpl implements UserDao {
 
             return users;
         }
+    @Override
+    public User getUserByUsername(String username) {
 
+        String sql = "SELECT * FROM users WHERE username = ?";
+
+        try (Connection con = new DBConnection().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+
+                    User user = new User();
+
+                    user.setUserId(rs.getInt("user_id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPassword(rs.getString("password"));
+                    user.setRole(rs.getString("role"));
+                    user.setStatus(rs.getString("status"));
+                    user.setCreatedAt(rs.getString("created_at"));
+
+                    return user;
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error fetching user by username", e);
+        }
+
+        return null;
+    }
     }
 
 
