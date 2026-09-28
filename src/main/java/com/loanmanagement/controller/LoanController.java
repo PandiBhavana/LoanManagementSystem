@@ -4,6 +4,8 @@ import com.loanmanagement.model.Loan;
 import com.loanmanagement.service.LoanService;
 import com.loanmanagement.service.impl.LoanServiceImpl;
 
+import java.util.List;
+
 public class LoanController {
     private final LoanService loanService =
             new LoanServiceImpl();
@@ -22,5 +24,9 @@ public class LoanController {
 
     public void deleteLoan(int loanId) {
         loanService.deleteLoan(loanId);
+    }
+
+    public List<Loan> getAllLoans() {
+        return loanService.getAllLoans();
     }
 }

@@ -9,6 +9,8 @@ import com.loanmanagement.exception.ValidationException;
 import com.loanmanagement.model.LoanType;
 import com.loanmanagement.service.LoanTypeService;
 
+import java.util.List;
+
 public class LoanTypeServiceImpl implements LoanTypeService {
 
     private LoanTypeDao loanTypeDao = new LoanTypeDaoImpl();
@@ -105,5 +107,9 @@ public class LoanTypeServiceImpl implements LoanTypeService {
 
             loanTypeDao.deleteLoanType(loanTypeId);
 
+    }
+    @Override
+    public List<LoanType> getAllLoanTypes() {
+        return loanTypeDao.getAllLoanTypes();
     }
 }

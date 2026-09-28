@@ -19,6 +19,8 @@ import com.loanmanagement.service.LoanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class LoanServiceImpl implements LoanService {
     private static final Logger logger =
             LoggerFactory.getLogger(LoanServiceImpl.class);
@@ -124,6 +126,10 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public void deleteLoan(int loanId) {
         loanDao.deleteLoan(loanId);
+    }
+    @Override
+    public List<Loan> getAllLoans() {
+        return loanDao.getAllLoans();
     }
     }
 

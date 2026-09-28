@@ -7,6 +7,8 @@ import com.loanmanagement.exception.ValidationException;
 import com.loanmanagement.model.User;
 import com.loanmanagement.service.UserService;
 
+import java.util.List;
+
 public class UserServiceImpl implements UserService {
 
     private UserDao userDao = new UserDaoImpl();
@@ -74,5 +76,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(int userId) {
         userDao.deleteUser( userId);
+    }
+    @Override
+    public List<User> getAllUsers() {
+        return userDao.getAllUsers();
     }
 }

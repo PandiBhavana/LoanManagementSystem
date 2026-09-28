@@ -4,6 +4,8 @@ import com.loanmanagement.model.User;
 import com.loanmanagement.service.UserService;
 import com.loanmanagement.service.impl.UserServiceImpl;
 
+import java.util.List;
+
 public class UserController {
     private final UserService userService =
             new UserServiceImpl();
@@ -22,5 +24,8 @@ public class UserController {
 
     public void deleteUser(int userId) {
         userService.deleteUser(userId);
+    }
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 }

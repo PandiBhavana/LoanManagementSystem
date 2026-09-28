@@ -7,6 +7,8 @@ import com.loanmanagement.model.Customer;
 import com.loanmanagement.service.CustomerService;
 import com.loanmanagement.util.ValidationUtil;
 
+import java.util.List;
+
 public class CustomerServiceImpl implements CustomerService {
 
     private CustomerDao customerDao = new CustomerDaoImpl();
@@ -61,5 +63,13 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void deleteCustomer(int customerId) {
         customerDao.deleteCustomer(customerId);
+    }
+    @Override
+    public List<Customer> getAllCustomers() {
+        return customerDao.getAllCustomers();
+    }
+    @Override
+    public Customer getCustomerByUsername(String username) {
+        return customerDao.getCustomerByUsername(username);
     }
 }

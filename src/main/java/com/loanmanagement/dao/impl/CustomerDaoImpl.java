@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerDaoImpl implements CustomerDao {
     private static final Logger logger =
@@ -199,6 +202,111 @@ public class CustomerDaoImpl implements CustomerDao {
                 logger.error("error while deleting customer", e);
                 throw new RuntimeException("Failed to delete customer", e);
             }
+
         }
+    @Override
+    public List <Customer> getAllCustomers() {
+
+        List<Customer> customers = new ArrayList<>();
+
+        String sql = "SELECT * FROM customers";
+
+        try (Connection con = new DBConnection().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                Customer customer = new Customer();
+
+                customer.setCustomerId(rs.getInt("customer_id"));
+                customer.setUserId(rs.getInt("user_id"));
+                customer.setFullName(rs.getString("full_name"));
+                customer.setEmail(rs.getString("email"));
+                customer.setPhone(rs.getString("phone"));
+                customer.setDob(rs.getString("dob"));
+                customer.setAddress(rs.getString("address"));
+                customer.setMonthlyIncome(rs.getDouble("monthly_income"));
+                customer.setPanNumber(rs.getString("pan_number"));
+                customer.setAadhaarLast4(rs.getString("aadhaar_last4"));
+                customer.setEmploymentType(rs.getString("employment_type"));
+                customer.setAccountNumber(rs.getString("account_number"));
+                customer.setIfscCode(rs.getString("ifsc_code"));
+                customer.setBankName(rs.getString("bank_name"));
+                customer.setKycStatus(rs.getString("kyc_status"));
+                customer.setKycRemarks(rs.getString("kyc_remarks"));
+
+                int kycVerifiedBy = rs.getInt("kyc_verified_by");
+                if (rs.wasNull()) {
+                    customer.setKycVerifiedBy(null);
+                } else {
+                    customer.setKycVerifiedBy(kycVerifiedBy);
+                }
+
+                customer.setKycVerifiedAt(rs.getString("kyc_verified_at"));
+                customer.setCreditScore(rs.getInt("credit_score"));
+                customer.setExistingEmi(rs.getDouble("existing_emi"));
+                customer.setStatus(rs.getString("status"));
+
+                customers.add(customer);
+            }
+
+            logger.info("All customers retrieved successfully");
+
+        } catch (Exception e) {
+
+            logger.error("Error while retrieving customers", e);
+
+            throw new RuntimeException(
+                    "Failed to retrieve customers", e);
+        }
+
+        return customers;
+    }
+    @Override
+    public Customer getCustomerByUsername(String username) {
+
+        String sql = "SELECT c.* " +
+                "FROM customers c " +
+                "JOIN users u ON c.user_id = u.user_id " +
+                "WHERE u.username = ?";
+
+        try (Connection con = new DBConnection().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+
+                    Customer customer = new Customer();
+
+                    customer.setCustomerId(
+                            rs.getInt("customer_id"));
+
+                    customer.setUserId(
+                            rs.getInt("user_id"));
+
+                    customer.setFullName(
+                            rs.getString("full_name"));
+
+                    customer.setEmail(
+                            rs.getString("email"));
+
+                    customer.setPhone(
+                            rs.getString("phone"));
+
+                    return customer;
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error fetching customer by username", e);
+        }
+
+        return null;
+    }
     }
 

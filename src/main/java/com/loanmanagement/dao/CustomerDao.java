@@ -2,6 +2,8 @@ package com.loanmanagement.dao;
 
 import com.loanmanagement.model.Customer;
 
+import java.util.List;
+
 public interface CustomerDao {
     void addCustomer(Customer customer);
 
@@ -10,4 +12,6 @@ public interface CustomerDao {
     void updateCustomer(Customer customer);
 
     void deleteCustomer(int customerId);
+    List<Customer> getAllCustomers();
+    Customer getCustomerByUsername(String username);
 }

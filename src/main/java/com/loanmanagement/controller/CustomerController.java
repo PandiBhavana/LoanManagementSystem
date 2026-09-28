@@ -4,6 +4,8 @@ import com.loanmanagement.model.Customer;
 import com.loanmanagement.service.CustomerService;
 import com.loanmanagement.service.impl.CustomerServiceImpl;
 
+import java.util.List;
+
 public class CustomerController {
     private final CustomerService customerService =
             new CustomerServiceImpl();
@@ -22,5 +24,12 @@ public class CustomerController {
 
     public void deleteCustomer(int customerId) {
         customerService.deleteCustomer(customerId);
+    }
+    public List<Customer> getAllCustomers() {
+        return customerService.getAllCustomers();
+
+    }
+    public Customer getCustomerByUsername(String username) {
+        return customerService.getCustomerByUsername(username);
     }
 }

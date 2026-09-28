@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoanTypeDaoImpl implements LoanTypeDao {
 
@@ -134,5 +136,45 @@ public class LoanTypeDaoImpl implements LoanTypeDao {
             logger.error("error while deleting loanType", e);
             throw new RuntimeException("Failed to delete loan type", e);
         }
+    }
+    @Override
+    public List<LoanType> getAllLoanTypes() {
+
+        List<LoanType> loanTypes = new ArrayList<>();
+
+        String sql = "SELECT * FROM loan_types";
+
+        try (Connection con = new DBConnection().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                LoanType loanType = new LoanType();
+
+                loanType.setLoanTypeId(rs.getInt("loan_type_id"));
+                loanType.setName(rs.getString("name"));
+                loanType.setDescription(rs.getString("description"));
+                loanType.setInterestRate(rs.getDouble("interest_rate"));
+                loanType.setMinAmount(rs.getDouble("min_amount"));
+                loanType.setMaxAmount(rs.getDouble("max_amount"));
+                loanType.setMaxTenureMonths(
+                        rs.getInt("max_tenure_months"));
+                loanType.setStatus(rs.getString("status"));
+
+                loanTypes.add(loanType);
+            }
+
+            logger.info("All loan types retrieved successfully");
+
+        } catch (Exception e) {
+
+            logger.error("Error while retrieving loan types", e);
+
+            throw new RuntimeException(
+                    "Failed to retrieve loan types", e);
+        }
+
+        return loanTypes;
     }
 }

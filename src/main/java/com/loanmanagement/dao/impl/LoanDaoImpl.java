@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoanDaoImpl implements LoanDao {
 
@@ -191,6 +193,49 @@ public class LoanDaoImpl implements LoanDao {
             throw new RuntimeException("Failed to get loan by application ID", e);
         }
         return null;
+    }
+    @Override
+    public List<Loan> getAllLoans() {
+
+        List<Loan> loans = new ArrayList<>();
+
+        String sql = "SELECT * FROM loans";
+
+        try (Connection con = new DBConnection().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                Loan loan = new Loan();
+
+                loan.setLoanId(rs.getInt("loan_id"));
+                loan.setApplicationId(rs.getInt("application_id"));
+                loan.setCustomerId(rs.getInt("customer_id"));
+                loan.setLoanTypeId(rs.getInt("loan_type_id"));
+                loan.setPrincipalAmount(rs.getDouble("principal_amount"));
+                loan.setInterestRate(rs.getDouble("interest_rate"));
+                loan.setTenureMonths(rs.getInt("tenure_months"));
+                loan.setTotalPayable(rs.getDouble("total_payable"));
+                loan.setOutstandingAmount(rs.getDouble("outstanding_amount"));
+                loan.setStartDate(rs.getString("start_date"));
+                loan.setStatus(rs.getString("status"));
+                loan.setCreatedBy(rs.getInt("created_by"));
+
+                loans.add(loan);
+            }
+
+            logger.info("All loans retrieved successfully");
+
+        } catch (Exception e) {
+
+            logger.error("Error while retrieving loans", e);
+
+            throw new RuntimeException(
+                    "Failed to retrieve loans", e);
+        }
+
+        return loans;
     }
     }
 

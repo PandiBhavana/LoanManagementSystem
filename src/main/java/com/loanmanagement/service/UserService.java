@@ -2,6 +2,8 @@ package com.loanmanagement.service;
 
 import com.loanmanagement.model.User;
 
+import java.util.List;
+
 public interface UserService {
     void addUser(User user);
 
@@ -10,4 +12,6 @@ public interface UserService {
     void updateUser(User user);
 
     void deleteUser(int userId);
+
+    List<User> getAllUsers();
 }

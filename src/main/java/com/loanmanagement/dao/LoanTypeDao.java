@@ -2,6 +2,8 @@ package com.loanmanagement.dao;
 
 import com.loanmanagement.model.LoanType;
 
+import java.util.List;
+
 public interface LoanTypeDao {
     void addLoanType(LoanType loanType);
 
@@ -10,5 +12,6 @@ public interface LoanTypeDao {
     void updateLoanType(LoanType loanType);
 
     void deleteLoanType(int loanTypeId);
+    List<LoanType> getAllLoanTypes();
 
 }

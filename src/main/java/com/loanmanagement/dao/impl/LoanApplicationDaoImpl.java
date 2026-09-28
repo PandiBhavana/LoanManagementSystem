@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoanApplicationDaoImpl implements LoanApplicationDao {
     private static final Logger logger =
@@ -169,6 +171,60 @@ public class LoanApplicationDaoImpl implements LoanApplicationDao {
             throw new RuntimeException("Failed to check loan type usage", e);
         }
         return false;
+    }
+    @Override
+    public List<LoanApplication> getAllApplications() {
+
+        List<LoanApplication> applications = new ArrayList<>();
+
+        String sql = "SELECT * FROM loan_applications";
+
+        try (Connection con = new DBConnection().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                LoanApplication application = new LoanApplication();
+
+                application.setApplicationId(
+                        rs.getInt("application_id"));
+                application.setCustomerId(
+                        rs.getInt("customer_id"));
+                application.setLoanTypeId(
+                        rs.getInt("loan_type_id"));
+                application.setRequestedAmount(
+                        rs.getDouble("requested_amount"));
+                application.setTenureMonths(
+                        rs.getInt("tenure_months"));
+                application.setPurpose(
+                        rs.getString("purpose"));
+                application.setStatus(
+                        rs.getString("status"));
+                application.setRemarks(
+                        rs.getString("remarks"));
+                application.setReviewedBy(
+                        rs.getInt("reviewed_by"));
+                application.setAppliedAt(
+                        rs.getString("applied_at"));
+                application.setReviewedAt(
+                        rs.getString("reviewed_at"));
+
+                applications.add(application);
+            }
+
+            logger.info("All loan applications retrieved successfully");
+
+        } catch (Exception e) {
+
+            logger.error(
+                    "Error while retrieving loan applications", e);
+
+            throw new RuntimeException(
+                    "Failed to retrieve loan applications", e);
+        }
+
+        return applications;
     }
 
     }

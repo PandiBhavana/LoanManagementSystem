@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDaoImpl implements UserDao {
     private static final Logger logger =
@@ -165,14 +167,51 @@ public class UserDaoImpl implements UserDao {
 
                 return user;
             }
+            return null;
+
 
         } catch (Exception e) {
             logger.error("Error while getting user by username", e);
             throw new RuntimeException("Failed to get user by username", e);
 
         }
-
-        return null;
     }
-}
+        @Override
+        public List<User> getAllUsers() {
+
+            List<User> users = new ArrayList<>();
+
+            String sql = "SELECT * FROM users";
+
+            try (Connection con = new DBConnection().getConnection();
+                 PreparedStatement ps = con.prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+
+                    User user = new User();
+
+                    user.setUserId(rs.getInt("user_id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPassword(rs.getString("password"));
+                    user.setRole(rs.getString("role"));
+                    user.setStatus(rs.getString("status"));
+                    user.setCreatedAt(rs.getString("created_at"));
+
+                    users.add(user);
+                }
+
+                logger.info("All users retrieved successfully");
+
+            } catch (Exception e) {
+
+                logger.error("Error while retrieving users", e);
+                throw new RuntimeException("Failed to retrieve users", e);
+            }
+
+            return users;
+        }
+
+    }
+
 

@@ -4,6 +4,8 @@ import com.loanmanagement.model.LoanType;
 import com.loanmanagement.service.LoanTypeService;
 import com.loanmanagement.service.impl.LoanTypeServiceImpl;
 
+import java.util.List;
+
 public class LoanTypeController {
     private final LoanTypeService loanTypeService =
             new LoanTypeServiceImpl();
@@ -14,6 +16,9 @@ public class LoanTypeController {
 
     public LoanType getLoanTypeById(int loanTypeId) {
         return loanTypeService.getLoanTypeById(loanTypeId);
+    }
+    public List<LoanType> getAllLoanTypes() {
+        return loanTypeService.getAllLoanTypes();
     }
 
     public void updateLoanType(LoanType loanType) {

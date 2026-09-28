@@ -4,6 +4,8 @@ import com.loanmanagement.model.LoanApplication;
 import com.loanmanagement.service.LoanApplicationService;
 import com.loanmanagement.service.impl.LoanApplicationServiceImpl;
 
+import java.util.List;
+
 public class LoanApplicationController {
     private final LoanApplicationService loanApplicationService =
             new LoanApplicationServiceImpl();
@@ -42,6 +44,9 @@ public class LoanApplicationController {
                 loanOfficerId,
                 remarks
         );
+    }
+    public List<LoanApplication> getAllApplications() {
+        return loanApplicationService.getAllApplications();
     }
 
     public void deleteApplication(int applicationId) {
